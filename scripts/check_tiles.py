@@ -39,7 +39,8 @@ for d in layers:
     p = d["path"].replace("{year}", key).replace("{month}", key).replace("{class}", key.lstrip("c") if key.startswith("c") else key)
     files.append((d["id"], p))
 for d in man["fire_layers"]["layers"]:
-    if not d.get("placeholder") and d["id"] in ("modis", "viirs", "clrm", "clrv"): files.append(("fire-" + d["id"], d["path"].replace("{month}", "2015-09")))
+    if not d.get("placeholder") and d["id"] in ("modis", "viirs", "clrm", "clrv"):
+        for nm, pth in ([("fire-" + d["id"], d["path"])] if d.get("path") else [("fire-" + d["id"] + "-" + c["label"].lower(), c["path"]) for c in d.get("classes", []) if c.get("path")]): files.append((nm, pth.replace("{month}", "2015-09")))
 fails, nlines = [], 0
 for name, path in files:
     url = base + path; st = []
