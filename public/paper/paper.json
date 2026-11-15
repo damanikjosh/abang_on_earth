@@ -1,0 +1,16 @@
+{
+ "title": "Learning VIIRS night radiance from MODIS without fire products: near-simultaneous pairs, a shared latent scene, and a pre-stated evaluation",
+ "author": "Joshua Julian Damanik",
+ "pages": 18,
+ "build_time": "2026-11-15T12:25+09:00",
+ "paper_commit": "604cfc9",
+ "repo_head": "604cfc9",
+ "sha256": "cc9563fc0c8710ded02831c1d066bf7253337344492f02ea4053dd0cefe4d02f",
+ "draft": false,
+ "pdf_public": true,
+ "thumb_masked": 0,
+ "thumb": {
+  "w": 720,
+  "h": 932
+ }
+}
