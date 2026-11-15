@@ -5,7 +5,7 @@ from playwright.sync_api import sync_playwright
 BASE = sys.argv[1] if len(sys.argv) > 1 else "http://127.0.0.1:4173/"
 IDLE = "new Promise(r=>{const m=window.__map;const f=()=>m.loaded()&&!m.isMoving()?r():m.once('idle',r);requestAnimationFrame(()=>requestAnimationFrame(f))})"
 ROWS = "[...document.querySelectorAll('#onmap .lp-row')].map(r=>r.dataset.id)"
-STACK = "(()=>{const L=__map.getStyle().layers.map(l=>l.id);const last=(p)=>{let k=-1;L.forEach((id,i)=>{if(id.startsWith(p))k=i});return k};return {fireV:last('fire-viirs-'),loss:last('ctx-loss-'),regions:last('regions')}})()"
+STACK = "(()=>{const L=__map.getStyle().layers.map(l=>l.id);const last=(p)=>{let k=-1;L.forEach((id,i)=>{if(id.startsWith(p))k=i});return k};return {fireV:last('fire-viirs'),loss:last('ctx-loss-'),regions:last('regions')}})()"
 fails = []
 with sync_playwright() as p:
     b = p.chromium.launch(args=["--use-gl=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"])

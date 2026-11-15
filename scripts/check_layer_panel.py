@@ -36,15 +36,16 @@ def handle_center(pg, rid):
     loc = pg.locator(f'#onmap .lp-row[data-id="{rid}"] .lp-handle'); loc.scroll_into_view_if_needed(); b = loc.bounding_box(); return b["x"] + b["width"] / 2, b["y"] + b["height"] / 2
 def row_top(pg, rid):
     loc = pg.locator(f'#onmap .lp-row[data-id="{rid}"]'); loc.scroll_into_view_if_needed(); return loc.bounding_box()
+def panel(pg): return pg.evaluate("(()=>{const r=document.querySelector('#p-layers .pbody').getBoundingClientRect();return [Math.max(r.top,0),Math.min(r.bottom,innerHeight)]})()")
 def mouse_drag(pg, rid, to_top=True):
-    x, y = handle_center(pg, rid); first = pg.evaluate(ONMAP)[0]; fb = row_top(pg, first); x, y = handle_center(pg, rid)
-    ty = fb["y"] + 3 if to_top else fb["y"] + fb["height"] * 5
-    pg.mouse.move(x, y); pg.mouse.down(); pg.mouse.move(x, (y + ty) / 2, steps=6); pg.mouse.move(x, ty, steps=6); pg.mouse.up(); pg.wait_for_timeout(500)
+    """Real mouse drag of a row's handle to the top (or bottom) of the panel; the panel scrolls by itself near its edge (the list can be longer than the panel), so the pointer is held at the edge for a moment."""
+    x, y = handle_center(pg, rid); top, bot = panel(pg); ty = top + 8 if to_top else bot - 8
+    pg.mouse.move(x, y); pg.mouse.down(); pg.mouse.move(x, (y + ty) / 2, steps=6); pg.mouse.move(x, ty, steps=6); pg.wait_for_timeout(1500); pg.mouse.up(); pg.wait_for_timeout(500)
 def touch_drag(pg, cdp, rid):
-    x, y = handle_center(pg, rid); first = pg.evaluate(ONMAP)[0]; fb = row_top(pg, first); x, y = handle_center(pg, rid); ty = fb["y"] + 3
+    x, y = handle_center(pg, rid); top, bot = panel(pg); ty = top + 8
     cdp.send("Input.dispatchTouchEvent", {"type": "touchStart", "touchPoints": [{"x": x, "y": y}]})
     for k in range(1, 9): cdp.send("Input.dispatchTouchEvent", {"type": "touchMove", "touchPoints": [{"x": x, "y": y + (ty - y) * k / 8}]}); pg.wait_for_timeout(30)
-    cdp.send("Input.dispatchTouchEvent", {"type": "touchEnd", "touchPoints": []}); pg.wait_for_timeout(500)
+    pg.wait_for_timeout(1500); cdp.send("Input.dispatchTouchEvent", {"type": "touchEnd", "touchPoints": []}); pg.wait_for_timeout(500)
 with sync_playwright() as p:
     b = p.chromium.launch(args=["--use-gl=swiftshader", "--enable-unsafe-swiftshader"])
     for (w, h, tg) in ((390, 844, "phone"), (1440, 900, "desk")):

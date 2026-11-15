@@ -22,7 +22,7 @@
 <section class="hero" id="top">
 <p class="eyebrow">NASA Space Apps Challenge 2026 · Seoul</p>
 <h1 class="disp">MODIS and VIIRS fires <span data-coverage-prep>in</span> <span data-coverage>Indonesia</span>, 2001 to today.</h1>
-<p class="lede">Two satellites count the same fires very differently: VIIRS reports roughly 4.6 to 5 times more detections in Indonesia. We map both, month by month, and put them on one scale with a simple baseline, with its error stated. Underneath: forest loss, oil palm, peat and burned area.</p>
+<p class="lede">Two satellites count the same fires very differently: VIIRS reports about 5 times more detections in Indonesia. We map both, month by month, and put them on one scale with a simple baseline, with its error stated. Underneath: forest loss, oil palm, peat and burned area.</p>
 <div class="ctas">
 <a class="pill solid" href="app/">Open the map</a>
 <a class="pill" href="#project">What is built</a>
@@ -34,8 +34,8 @@
 <div class="stack">
 <p class="eyebrow">What the app shows now</p>
 <h2 class="disp" id="project-h">Real fires, one scale, and the land underneath.</h2>
-<p class="body">A full-screen map of <span data-coverage>Indonesia</span> with real MODIS (2001 on) and VIIRS (2012 on) fire detections from NASA FIRMS, one month at a time, and harmonized monthly counts for each province. The harmonized counts come from a <b>province-by-month ratio baseline</b>: before 2012 we scale MODIS by the VIIRS/MODIS ratio of each province and calendar month. On years held out of the fit its error is <b>12.6% for the national monthly count and 28.9% for the median province</b>. It is a baseline, not our model.</p>
-<p class="body">Under the fires you can switch on forest loss (Hansen), oil palm by planting year (Descals), peat, burned area, forest history since 1990 (JRC) and tree-plantation conversion. Forest alerts and pulpwood are still placeholder layers and say so.</p>
+<p class="body">A full-screen map of <span data-coverage>Indonesia</span> with real MODIS (2001 on) and VIIRS (2012 on) fire detections from NASA FIRMS, one month at a time, and harmonized monthly counts for each province. The harmonized counts come from a <b>province-by-month ratio baseline</b>: before 2012 we scale MODIS by the VIIRS/MODIS ratio of each province and calendar month. On years held out of the fit its error is <b>12.6% for the national monthly count and 28.9% for the median province's monthly count</b>. It is a baseline, not our model.</p>
+<p class="body">Under the fires you can switch on forest loss (Hansen), oil palm by planting year (Descals), peat, burned area, forest history since 1990 (JRC) and tree-plantation conversion.</p>
 </div>
 <div class="tl" role="img" aria-label="Timeline: MODIS records from 2001 in the app, VIIRS from 2012; the baseline puts both on one scale from 2001 to today">
 <div class="row"><div class="lab"><span>MODIS · 1 km</span><span>2001 →</span></div><div class="bar"></div></div>
@@ -53,11 +53,11 @@
 <div class="stack">
 <p class="eyebrow">The model research</p>
 <h2 class="disp" id="research-h">Can a learned model beat the baseline?</h2>
-<p class="body">We are training a shared encoder for MODIS and VIIRS on pairs of images taken minutes apart over the same ground. We built 767 such pairs. This is research in progress: the first experiments used a smaller set, and the model will replace the baseline on the map <b>only if it beats it</b>. Nothing on the map comes from it today.</p>
+<p class="body">We trained a shared encoder for MODIS and VIIRS on pairs of images taken minutes apart over the same ground. We selected 1,017 such pairs; 971 of them gave tiles, and we kept 32,914 tiles. This is research in progress. We ran the model on 46,125 Aqua MODIS night scenes from July 2002 to January 2012, and the map shows the result as the layer <b>Harmonized VIIRS</b>. It is experimental and night only: the model passed 1 of 4 test lines we fixed before testing. The charts and counts still use the ratio baseline.</p>
 </div>
 <div class="stack">
 <p class="eyebrow">What we found about forest, fire and palm</p>
-<p class="body">About <b>24%</b> of the forest lost in Indonesia since 2001 was oil palm by 2021, mostly planted within three years of the loss. Forest inside a MODIS fire footprint was about <b>1.5 to 2 times</b> as likely to become oil palm within ten years as similar forest without one. This is an association, not proof that the fire caused the planting; the size depends on how controls are chosen and on the sensor.</p>
+<p class="body">About <b>24%</b> of the forest lost in Indonesia since 2001 was oil palm by 2021, mostly planted within three years of the loss. Forest inside a MODIS fire footprint was about <b>1.5 to 2 times</b> as likely to be mapped as oil palm within ten years as similar forest 2 to 20 km away without one. This is an association, not proof that the fire caused the planting; the size depends on how controls are chosen and on the sensor.</p>
 </div>
 </section>
 

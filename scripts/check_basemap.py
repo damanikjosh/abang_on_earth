@@ -67,7 +67,7 @@ with sync_playwright() as p:
             pg.locator("#layers .lp-group[data-group=land] .lp-gbtn").click() if not pg.locator("#layers .lp-group[data-group=land] .lp-gbody").is_visible() else None
             pr = pg.locator('#layers .lp-crow[data-id="peat"]'); pr.scroll_into_view_if_needed()
             nm = pr.locator(".lp-name").inner_text(); hh = pr.locator(".lp-name").bounding_box()["height"]
-            pr.locator(".lp-info").click(); hint = pg.locator(".lp-pop .lp-pop-desc").inner_text(); hint = hint[:len("Swamp soil made of plant remains; burns underground when drained.")]; pg.keyboard.press("Escape")  # the one-line hint opens the (i) panel (part 2 of )
+            pr.locator(".lp-info").click(); hint = pg.locator(".lp-pop .lp-pop-sec p").first.inner_text(); hint = hint[:len("Swamp soil made of plant remains; burns underground when drained.")]; pg.keyboard.press("Escape")  # the one-line hint opens the (i) panel (part 2 of )
             if SHOTS: pr.screenshot(path=f"{SHOTS}/{name}-peat-row.png")
             need(nm == "Peatland" and hint == "Swamp soil made of plant remains; burns underground when drained." and hh < 28, f"{name}: peat row '{nm}', hint set, one line (height {hh:.0f}px)")
             need(pg.evaluate("document.documentElement.scrollWidth<=innerWidth"), f"{name}: no horizontal scroll")

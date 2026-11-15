@@ -42,7 +42,11 @@ with sync_playwright() as p:
             row = pg.locator('#onmap .lp-row[data-id="fire-modis"]')
             labels = pg.evaluate("[...document.querySelectorAll('#lyr-fire-modis .cls')].map(e=>e.innerText.trim()+':'+e.querySelector('input').checked)")
             need(labels == ["Day:true", "Night:true"] and row.locator("#lyr-fire-modis .cls").count() == 2, f"{name}: the MODIS row holds two labelled boxes, Day and Night, both ticked {labels}")
-            v0 = vis(pg); need(all(x == "visible" for x in v0) and set(v0) == {"fire-modis_1-2002-09-dens", "fire-modis_1-2002-09-pts", "fire-modis_2-2002-09-dens", "fire-modis_2-2002-09-pts"}, f"{name}: 2002-09 is drawn from the day and the night file (and not from the layer's own file): {sorted(v0)}")
+            for _ in range(40):  # slow machine: wait for the tiles instead of a fixed pause
+                v0 = vis(pg)
+                if v0 and all(x == "visible" for x in v0.values()): break
+                pg.wait_for_timeout(500)
+            need(all(x == "visible" for x in v0.values()) and set(v0) == {"fire-modis_1-2002-09-dens", "fire-modis_1-2002-09-pts", "fire-modis_2-2002-09-dens", "fire-modis_2-2002-09-pts"}, f"{name}: 2002-09 is drawn from the day and the night file (and not from the layer's own file): {sorted(v0)}")
             d0, n0 = rendered(pg, "fire-modis_1-2002-09-pts"), rendered(pg, "fire-modis_2-2002-09-pts")
             need(d0 > 0 and n0 > 0, f"{name}: points on screen at z9.5: day {d0}, night {n0}")
             if SHOTS: pg.screenshot(path=f"{SHOTS}/dn-{name}-both.png")
@@ -108,9 +112,12 @@ with sync_playwright() as p:
                 need(ids.index("regions") > last("fire-modis_1-") and ids.index("regions") > last("fire-modis_2-") and abs(first("fire-modis_2-") - last("fire-modis_1-")) <= 4, f"{name}: the colour row dragged above MODIS draws above both class layers; the two stay together (day {first('fire-modis_1-')}-{last('fire-modis_1-')}, night {first('fire-modis_2-')}-{last('fire-modis_2-')}, regions {ids.index('regions')})")
             # --- rows hold controls only (Joshua's rule): no free text in any row of either list
             load(pg, "#" + M + Z7 + "&s=fire-modis,fire-viirs,fire-harm,loss,regions,drivers&t=layers")
-            free = pg.evaluate("""(()=>{const bad=[];for(const r of document.querySelectorAll('#onmap .lp-row,#layers .lp-crow')){const c=r.cloneNode(true);
-              c.querySelectorAll('.lp-name,label.cls,select,.field span,.var-row label,button,[hidden],.sr,.lp-sr').forEach(e=>e.remove());
-              const t=c.textContent.replace(/\\s+/g,' ').trim();const vis=[...r.querySelectorAll('.ls,.gap,.cls-hint,.var-legend,.legend,.lp-tag,.kchip')].filter(e=>e.offsetParent!==null).length;
+            free = pg.evaluate("""(()=>{const bad=[];for(const r of document.querySelectorAll('#onmap .lp-row,#layers .lp-crow')){
+              let t=r.innerText; // only what is drawn
+              const allowed=[...r.querySelectorAll('.lp-name,label.cls,.field span,.var-row label')].map(e=>e.innerText).concat([...r.querySelectorAll('select')].map(s=>[...s.options].map(o=>o.textContent).join('\\n')));
+              for(const a of allowed) t=t.split(a).join(' ');
+              t=t.replace(/\\s+/g,' ').trim();
+              const vis=[...r.querySelectorAll('.ls,.gap,.cls-hint,.var-legend,.legend,.lp-tag,.kchip')].filter(e=>e.offsetParent!==null).length;
               if(t||vis)bad.push(r.dataset.id+': '+t.slice(0,60)+' / visible helpers '+vis)}return bad})()""")
             need(not free, f"{name}: no row of 'On the map' or the catalogue contains free text {free[:3]}")
             names = pg.evaluate("[...document.querySelectorAll('#onmap .lp-name')].map(e=>e.innerText)")
@@ -137,7 +144,7 @@ with sync_playwright() as p:
             need(plain.evaluate("e=>getComputedStyle(e,'::after').content") in ("none", "normal") and plain.get_attribute("aria-label") == "About MODIS" and hi.evaluate("e=>getComputedStyle(e,'::after').content") == '"!"', f"{name}: MODIS has a plain (i) in 2002-09, Harmonized VIIRS has the badge")
             hi.click(); pg.wait_for_timeout(300); txt = pg.locator(".lp-pop .lp-pop-imp").inner_text(); cols = pg.evaluate("(()=>{const e=document.querySelector('.lp-pop .lp-pop-imp'),p=e.querySelector('p'),f=x=>x.match(/[\\d.]+/g).map(Number);return [f(getComputedStyle(e).backgroundColor),f(getComputedStyle(p).color)]})()"); pg.keyboard.press("Escape")
             lum = lambda c: sum(w * (((v / 255) / 12.92) if v / 255 <= 0.03928 else (((v / 255) + 0.055) / 1.055) ** 2.4) for w, v in zip((0.2126, 0.7152, 0.0722), c[:3])); sc = lambda c: [x * 255 for x in c[:3]] if max(c[:3]) <= 1 else c[:3]; l1, l2 = lum(sc(cols[0])), lum(sc(cols[1])); cr = (max(l1, l2) + 0.05) / (min(l1, l2) + 0.05)
-            need("Model output, experimental" in txt and "Night only; day is not computed" in txt and "failed 3 of its 4" in txt and cr >= 4.5, f"{name}: Harmonized VIIRS important block carries the sentences; text on its tinted background has contrast {cr:.1f}:1")
+            need("Model output, experimental" in txt and "Night only; day is not computed" in txt and "1 of 4 pre-set lines" in txt and cr >= 4.5, f"{name}: Harmonized VIIRS important block carries the sentences; text on its tinted background has contrast {cr:.1f}:1")
             # --- keyboard
             load(pg, "#" + M + Z7 + "&t=layers"); box(pg, 2).scroll_into_view_if_needed(); box(pg, 2).focus(); pg.keyboard.press("Space"); settle(pg)
             need(not box(pg, 2).is_checked() and hidden(vis(pg), "fire-modis_2-2002-09-pts"), f"{name}: the Night box toggles with Space from the keyboard")
