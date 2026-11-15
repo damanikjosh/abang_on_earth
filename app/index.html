@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Abang on Earth · App</title>
+<meta name="description" content="Interactive map of MODIS and VIIRS fire detections by month across Southeast Asia, with forest loss, oil palm and peat underneath."><link rel="icon" href="../favicon.svg" type="image/svg+xml"><link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
+<style>/* shown until the app is ready: a slow connection no longer shows a blank screen */
+#loading{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;gap:12px;font:500 15px/1.4 system-ui,sans-serif;color:#3a342d;background:#f1ede6;pointer-events:none}
+#loading i{width:18px;height:18px;border-radius:50%;border:3px solid currentColor;border-right-color:transparent;animation:aa-spin .9s linear infinite}
+@keyframes aa-spin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){#loading i{animation:none}}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) #loading{color:#e8e2d8;background:#1a1713}}:root[data-theme=dark] #loading{color:#e8e2d8;background:#1a1713}
+body:not([data-ready]) #dock{opacity:.4;pointer-events:none}
+#loading.failed{flex-direction:column;text-align:center;padding:24px}#loading .lf{display:flex;flex-direction:column;gap:12px;align-items:center;max-width:36ch}#loading .lf span{font-weight:400;font-size:13px;opacity:.8;overflow-wrap:anywhere}#loading .lf button{font:inherit;font-size:15px;min-height:44px;padding:0 20px;border-radius:999px;border:1px solid currentColor;background:transparent;color:inherit;cursor:pointer}</style>
+<script type="module" src="/src/app.ts"></script></head>
+<body class="fs">
+<div id="loading" role="status" aria-live="polite"><i aria-hidden="true"></i><span>Loading map and data…</span></div>
+<a class="skip" href="#dock">Skip to the map controls</a>
+<h1 class="sr">Abang on Earth: map of fire detections in Southeast Asia</h1>
+
+<header class="topbar" id="topbar">
+  <a class="brand disp" href="../">Abang on Earth</a>
+  <button id="menu" class="btn menu" type="button" aria-expanded="false" aria-controls="nav">Menu</button>
+  <nav id="nav" aria-label="Main">
+    <a href="../">Home</a>
+    <a href="../app/" aria-current="page">App</a>
+    <a href="../credits/">Credits</a>
+    <button id="theme" class="btn" type="button" aria-label="Toggle light or dark theme">Light / Dark</button>
+  </nav>
+</header>
+
+<div class="chip" id="banner" role="status" hidden></div>
+
+<div id="dock" data-tab="timeline" data-open="1" tabindex="-1">
+  <div class="sheet-head" id="sheet-head">
+    <button type="button" class="grab" id="grab" aria-label="Expand or collapse the panel"><i></i></button>
+    <div class="tabs" role="tablist" aria-label="Panels">
+      <button type="button" role="tab" data-tab="layers" id="tab-layers" aria-controls="p-layers">Layers</button>
+      <button type="button" role="tab" data-tab="timeline" id="tab-timeline" aria-controls="p-timeline">Timeline</button>
+      <button type="button" role="tab" data-tab="details" id="tab-details" aria-controls="p-details">Details</button>
+    </div>
+  </div>
+
+  <aside class="panel p-layers" id="p-layers" aria-label="Map settings and layers">
+    <div class="ph-row"><p class="eyebrow">Map</p>
+      <button type="button" class="collapse" data-for="p-layers" aria-expanded="true" aria-label="Collapse map settings panel">Hide</button></div>
+    <div class="pbody">
+      <details class="sel" id="sel"><summary id="sel-sum"><span id="sel-txt">Country, region</span></summary>
+      <label class="field" id="country-field" hidden><span>Country</span><select id="country"></select></label>
+      <label class="field"><span>Region</span><select id="region"></select></label>
+      </details>
+      <label class="field" id="base-field"><span>Map type</span><select id="basemap"><option value="plain">Plain map</option><option value="sat">Satellite</option></select></label>
+<div id="metric-holder" hidden><label class="field"><span>Metric</span><select id="metric">
+        <option value="viirs_eq">VIIRS-equivalent (baseline)</option>
+        <option value="modis_eq">MODIS-equivalent (baseline)</option>
+        <option value="modis_raw">MODIS observed</option>
+        <option value="viirs_raw">VIIRS observed</option></select></label></div>
+      <p class="muted small" id="base-note" role="status"></p>
+            <section class="lp-panel" aria-labelledby="lh"><div class="sec-head"><h3 class="eyebrow" id="lh">On the map</h3>
+          <button type="button" class="linkbtn" id="reset-order" hidden>Reset order</button>
+          <button type="button" class="info" id="sec-info" aria-label="About these layers" title="Layers are real data unless marked. Top of the list draws on top." aria-haspopup="dialog" aria-expanded="false"><span aria-hidden="true">i</span></button></div>
+        <div id="onmap"></div>
+        <div class="sec-head lp-allhead"><h3 class="eyebrow" id="lh2">All layers</h3></div>
+        <div class="layers" id="layers"></div>
+        <div id="lyr-store" hidden></div>
+        <div class="fire-legend" id="fire-legend"></div>
+        <p class="muted small" id="lnote">Tiles extend beyond Indonesia; statistics are Indonesia-only.</p></section>
+    </div>
+  </aside>
+
+  <aside class="panel p-details" id="p-details" aria-label="Selected region details and legend">
+    <div class="ph-row"><p class="eyebrow">Details</p>
+      <button type="button" class="collapse" data-for="p-details" aria-expanded="true" aria-label="Collapse details panel">Hide</button></div>
+    <div class="pbody">
+      <h2 class="disp" id="d-name">Region</h2>
+      <p class="muted small" id="d-month"></p>
+      <p class="muted small" id="d-unit"></p>
+      <p class="warn small" id="d-warn" role="status" hidden></p>
+      <p class="muted small" id="d-chip" role="status"></p>
+      <details class="dsec" id="ds-fires" open><summary>Fires</summary>
+      <dl class="nums">
+        <div id="dr-modis_raw"><dt>MODIS observed</dt><dd id="d-modis">–</dd></div>
+        <div id="dr-viirs_raw"><dt>VIIRS observed</dt><dd id="d-viirs">–</dd></div>
+        <div id="dr-modis_eq" class="harm"><dt>MODIS-equivalent</dt><dd><span id="d-meq">–</span> <small id="d-meqf" class="flag"></small></dd></div>
+        <div id="dr-viirs_eq" class="harm"><dt>VIIRS-equivalent</dt><dd><span id="d-det">–</span> <small id="d-flag" class="flag"></small></dd></div>
+      </dl></details>
+      <details class="dsec" id="ds-land" open><summary>Land</summary>
+      <dl class="nums">
+        <div><dt id="d-loss-l">Forest loss</dt><dd id="d-loss">–</dd></div>
+        <div><dt id="d-palm-l">Oil palm</dt><dd id="d-palm">–</dd></div>
+        <div><dt>Peat area</dt><dd id="d-peat">–</dd></div>
+        <div><dt id="d-burn-l">Burned (year)</dt><dd id="d-burn">–</dd></div>
+        <div><dt id="d-burnm-l">Burned (month)</dt><dd id="d-burnm">–</dd></div>
+        <div><dt id="d-tmf-l">Cleared (1990+)</dt><dd id="d-tmf">–</dd></div>
+      </dl></details>
+      <details class="dsec" id="ds-notes" open><summary>Data notes</summary>
+      <p class="muted small key" id="d-estnote"><i class="est-sw"></i> Hatched / dashed = <b>estimated</b> (before VIIRS): MODIS &times; province&times;month ratio, a baseline, not a model.</p>
+      <p class="muted small hint">Click a province to select it. Forest loss is for the selected year; oil palm is planted area up to that year.</p>
+      </details>
+    </div>
+  </aside>
+
+  <section class="panel p-timeline" id="p-timeline" aria-label="Timeline">
+    <div class="drawer" id="drawer" data-open="1">
+      <div class="cal" id="cal" role="img" aria-label="Heat calendar of monthly counts for the selected region. Use the month slider to move through the months."></div>
+    </div>
+    <div class="tl-row">
+      <button id="play" class="play" type="button" aria-label="Play months" aria-pressed="false"><span aria-hidden="true">&#9654;</span></button>
+      <div class="tl-month"><span class="eyebrow">Month</span><output id="slv" class="disp"></output><span id="tl-est" class="flag est" hidden>estimated</span></div>
+      <div class="tl-slider"><input type="range" id="slider" min="0" step="1" aria-label="Selected month"><div class="ticks" id="ticks" aria-hidden="true"></div></div>
+      <button id="calbtn" class="btn calbtn" type="button" aria-expanded="true" aria-controls="drawer">Calendar</button>
+    </div>
+  </section>
+</div>
+<div id="map" role="application" aria-label="Map of regions colored by monthly fire count"></div>
+</body></html>

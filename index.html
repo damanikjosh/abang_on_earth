@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Abang on Earth — MODIS and VIIRS fires across Southeast Asia, 2001 to today</title>
+<link rel="canonical" href="https://abang.earth/">
+<meta property="og:url" content="https://abang.earth/"><meta property="og:title" content="Abang on Earth — MODIS and VIIRS fires across Southeast Asia, 2001 to today"><meta property="og:type" content="website"><meta property="og:site_name" content="Abang on Earth"><meta property="og:description" content="NASA Space Apps Challenge 2026 Seoul. Abang on Earth, by team Abang Abang, maps real MODIS and VIIRS fires across Southeast Asia by month, with a baseline that puts both on one scale, and the forest loss and oil palm underneath."><meta name="twitter:card" content="summary"><link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="description" content="NASA Space Apps Challenge 2026 Seoul. Abang on Earth, by team Abang Abang, maps real MODIS and VIIRS fires across Southeast Asia by month, with a baseline that puts both on one scale, and the forest loss and oil palm underneath.">
+<script type="module" src="/src/home.ts"></script></head>
+<body class="home">
+<div class="wrap">
+
+<header class="hdr">
+<a class="brand disp" href="./">Abang on Earth</a>
+<nav aria-label="Main">
+<a href="" aria-current="page">Home</a>
+<a href="app/">App</a>
+<a href="credits/">Credits</a>
+<button id="theme" type="button" aria-label="Toggle light or dark theme">Light / Dark</button>
+</nav>
+</header>
+
+<main>
+<section class="hero" id="top">
+<p class="eyebrow">NASA Space Apps Challenge 2026 · Seoul</p>
+<h1 class="disp">MODIS and VIIRS fires <span data-coverage-prep>in</span> <span data-coverage>Indonesia</span>, 2001 to today.</h1>
+<p class="lede">Two satellites count the same fires very differently: VIIRS reports roughly 4.6 to 5 times more detections in Indonesia. We map both, month by month, and put them on one scale with a simple baseline, with its error stated. Underneath: forest loss, oil palm, peat and burned area.</p>
+<div class="ctas">
+<a class="pill solid" href="app/">Open the map</a>
+<a class="pill" href="#project">What is built</a>
+</div>
+<p class="body muted" id="coverage-list" hidden></p>
+</section>
+
+<section class="band two" id="project" aria-labelledby="project-h">
+<div class="stack">
+<p class="eyebrow">What the app shows now</p>
+<h2 class="disp" id="project-h">Real fires, one scale, and the land underneath.</h2>
+<p class="body">A full-screen map of <span data-coverage>Indonesia</span> with real MODIS (2001 on) and VIIRS (2012 on) fire detections from NASA FIRMS, one month at a time, and harmonized monthly counts for each province. The harmonized counts come from a <b>province-by-month ratio baseline</b>: before 2012 we scale MODIS by the VIIRS/MODIS ratio of each province and calendar month. On years held out of the fit its error is <b>12.6% for the national monthly count and 28.9% for the median province</b>. It is a baseline, not our model.</p>
+<p class="body">Under the fires you can switch on forest loss (Hansen), oil palm by planting year (Descals), peat, burned area, forest history since 1990 (JRC) and tree-plantation conversion. Forest alerts and pulpwood are still placeholder layers and say so.</p>
+</div>
+<div class="tl" role="img" aria-label="Timeline: MODIS records from 2001 in the app, VIIRS from 2012; the baseline puts both on one scale from 2001 to today">
+<div class="row"><div class="lab"><span>MODIS · 1 km</span><span>2001 →</span></div><div class="bar"></div></div>
+<div class="row"><div class="lab"><span>VIIRS · 375 m</span><span>2012 →</span></div><div class="bar late"></div></div>
+<div class="row acc"><div class="lab"><span>One scale (baseline)</span><span>2001 → today</span></div><div class="bar"></div></div>
+<div class="axis"><span>2001</span><span>2012</span><span>Today</span></div>
+</div>
+</section>
+
+<section class="band" id="shot" aria-label="The app">
+<figure class="appshot"><a href="app/"><img src="home-app.jpg" width="1440" height="900" loading="lazy" alt="Screenshot of the app: Borneo in September 2019 with monthly fire density, the layer panel on the left, the details card on the right and the month calendar below."></a></figure>
+</section>
+
+<section class="band two" id="research" aria-labelledby="research-h">
+<div class="stack">
+<p class="eyebrow">The model research</p>
+<h2 class="disp" id="research-h">Can a learned model beat the baseline?</h2>
+<p class="body">We are training a shared encoder for MODIS and VIIRS on pairs of images taken minutes apart over the same ground. We built 767 such pairs. This is research in progress: the first experiments used a smaller set, and the model will replace the baseline on the map <b>only if it beats it</b>. Nothing on the map comes from it today.</p>
+</div>
+<div class="stack">
+<p class="eyebrow">What we found about forest, fire and palm</p>
+<p class="body">About <b>24%</b> of the forest lost in Indonesia since 2001 was oil palm by 2021, mostly planted within three years of the loss. Forest inside a MODIS fire footprint was about <b>1.5 to 2 times</b> as likely to become oil palm within ten years as similar forest without one. This is an association, not proof that the fire caused the planting; the size depends on how controls are chosen and on the sensor.</p>
+</div>
+</section>
+
+<section class="band" id="paper" aria-labelledby="paper-h" hidden>
+<div class="paper">
+<picture><source type="image/webp" srcset="paper/technical-report-p1.webp"><img id="paper-img" src="paper/technical-report-p1.png" width="360" height="466" loading="lazy" decoding="async" alt="First page of the technical report"></picture>
+<div class="stack">
+<p class="eyebrow">Technical report</p>
+<h2 class="paper-title" id="paper-h"></h2>
+<p class="body paper-by"></p>
+<p class="muted small paper-status"></p>
+<p class="paper-act"><a class="pill" id="paper-link" href="paper/technical-report.pdf" target="_blank" rel="noopener">Read the PDF</a><span id="paper-soon" hidden>PDF available on request</span></p>
+</div>
+</div>
+</section>
+
+<section class="band" id="team" aria-labelledby="team-h">
+<div class="stack" style="gap:12px">
+<p class="eyebrow">The team</p>
+<h2 class="disp" id="team-h">Abang Abang</h2>
+</div>
+<article class="team">
+<img src="/team/joshua.jpg" alt="Portrait of Joshua Julian Damanik" width="280" height="280">
+<div class="info">
+<div class="stack" style="gap:8px">
+<h3 class="disp">Joshua Julian Damanik</h3>
+<p class="role">AI / Robotics Engineer at CarbonSix</p>
+<p class="edu">PhD in Aerospace Engineering, KAIST</p>
+</div>
+<div class="stack" style="gap:12px">
+<p class="eyebrow" style="font-size:13px">Recognition</p>
+<ul class="awards">
+<li><span>IEEE ICRA 2024 BARN Challenge</span><b>1st place</b></li>
+<li><span>The 3rd F1TENTH Korea Challenge</span><b>7th place</b></li>
+<li><span>NASA Space Apps Challenge 2025, Seoul Local Event</span><b>Rising Star Recognition</b></li>
+</ul>
+</div>
+</div>
+</article>
+</section>
+</main>
+
+<footer class="ftr">
+<span>Abang on Earth · NASA Space Apps Challenge 2026, Seoul</span>
+<span><a href="credits/">Credits &amp; data sources</a> · No trackers, no cookies.</span>
+</footer>
+
+</div>
+</body></html>

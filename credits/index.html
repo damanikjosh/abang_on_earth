@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Abang on Earth · Credits</title>
+<meta name="description" content="Data sources, software, fonts and licences used by Abang on Earth."><link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<script type="module" src="/src/main.ts"></script></head>
+<body>
+<div class="wrap">
+<header class="hdr">
+<a class="brand disp" href="../">Abang on Earth</a>
+<nav aria-label="Main">
+<a href="../">Home</a>
+<a href="../app/">App</a>
+<a href="../credits/" aria-current="page">Credits</a>
+<button id="theme" type="button" aria-label="Toggle light or dark theme">Light / Dark</button>
+</nav>
+</header>
+<main class="page">
+<p class="eyebrow">Credits</p>
+<h1 class="disp">Credits and licences</h1>
+<h2 class="disp">Software</h2>
+<ul>
+<li><a href="https://maplibre.org/maplibre-gl-js/docs/">MapLibre GL JS</a> - BSD-3-Clause.</li>
+<li><a href="https://rsms.me/inter/">Inter</a> and <a href="https://github.com/floriankarsten/space-grotesk">Space Grotesk</a> typefaces - SIL Open Font License 1.1, self-hosted via <a href="https://fontsource.org/">Fontsource</a> (MIT).</li>
+<li>Team portrait - provided by and used with permission of the pictured team member.</li>
+<li><a href="https://github.com/protomaps/PMTiles">PMTiles</a> JavaScript library (<code>pmtiles</code> 4.5.0, Protomaps) - BSD-3-Clause; reads the layer tiles from static files.</li>
+<li><a href="https://vite.dev/">Vite</a> - MIT.</li>
+<li><a href="https://www.typescriptlang.org/">TypeScript</a> - Apache-2.0.</li>
+</ul>
+<h2 class="disp">Map tiles</h2>
+<ul>
+<li>Basemap by <a href="https://openfreemap.org/">OpenFreeMap</a> (free, no API key; styles Positron and Dark), vector tiles from <a href="https://openmaptiles.org/">OpenMapTiles</a> (schema BSD / design CC-BY 4.0), map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> (ODbL). Attribution is shown on the map.</li>
+<li>Satellite view (Map type &gt; Satellite): imagery <em>Blue Marble: Next Generation</em> (NASA Earth Observatory, about 500 m, cloud-free composite), served by <a href="https://nasa-gibs.github.io/gibs-api-docs/">NASA GIBS</a> (free, no key). NASA-led mission data are CC0 under the <a href="https://www.earthdata.nasa.gov/engage/open-data-services-software/data-use-policy">NASA Earth Science data use policy</a>. We acknowledge the use of imagery provided by services from NASA&rsquo;s Global Imagery Browse Services (GIBS), part of NASA&rsquo;s Earth Science Data and Information System (ESDIS). Shown on the map and under the Map type selector. No NASA logo; this is not an endorsement by NASA.</li>
+</ul>
+<h2 class="disp">Fonts and images</h2>
+<ul><li>Fonts: Inter and Space Grotesk (SIL OFL 1.1), self-hosted, no font CDN. No external images. No NASA logo.</li></ul>
+<h2 class="disp">Data shown on the map</h2>
+<ul>
+<li><b>Fire detections</b> (real): <a href="https://firms.modaps.eosdis.nasa.gov/">NASA FIRMS</a> archive, MODIS Collection 6.1 active fires (MOD14 from Terra and MYD14 from Aqua, 1 km; NASA MODIS Adaptive Processing System / LANCE) and VIIRS S-NPP 375 m active fires (VNP14IMG; NASA VIIRS Land Science team / LANCE), for Indonesia, Malaysia, Brunei, Singapore, Thailand, Myanmar, Laos, Cambodia, Vietnam, the Philippines and Timor-Leste, 2001&ndash;2025. NASA open data (CC0). "We acknowledge the use of data and/or imagery from NASA's FIRMS (https://earthdata.nasa.gov/firms), part of NASA's Earth Science Data and Information System (ESDIS)." We drop type 1&ndash;3 detections, MODIS confidence below 30 and VIIRS low confidence. The harmonized monthly counts are our own ratio baseline computed from these detections.</li>
+<li><b>Region shapes</b> (first-level administrative units; 287 regions in 11 countries): <a href="https://www.geoboundaries.org/">geoBoundaries</a> gbOpen ADM1 (Runfola et al. 2020, PLoS ONE 15(4):e0231866). The licence differs by country, as listed by geoBoundaries: <a href="https://opendatacommons.org/licenses/odbl/1-0/">Open Database License 1.0</a> (ODbL) for <b>Indonesia</b> (2017) and <b>Malaysia</b> (2017), source OpenStreetMap (Wambacher), &copy; OpenStreetMap contributors; <b>Singapore</b> (2016, five regions), ODbL 1.0 as listed by geoBoundaries, source Urban Redevelopment Authority Master Plan 2014 subzone boundary via data.gov.sg; and <b>Thailand</b>, <b>Cambodia</b>, <b>Laos</b> and <b>Timor-Leste</b>, ODbL 1.0 as listed by geoBoundaries; <b>Myanmar</b>, <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; the <b>Philippines</b>, <a href="https://creativecommons.org/licenses/by/3.0/igo/">CC BY 3.0 IGO</a>; <b>Vietnam</b> and <b>Brunei</b> (2011, four districts, source Wikimedia Commons, user Tachymetre), Public Domain. Our copy is simplified (the Philippine file to 5 m); the ODbL parts are offered under the same ODbL terms.</li>
+<li><b>Forest loss</b>, 2001&ndash;2025 (real): Hansen, M.C. et al. 2013, <em>High-resolution global maps of 21st-century forest cover change</em>, Science 342:850, GFC v1.13 (University of Maryland, Google, USGS, NASA); CC BY 4.0. We recoloured and tiled it as share of area.</li>
+<li><b>Oil palm</b> by planting year, 1989&ndash;2021 (real): Descals, A. et al. 2024, ESSD 16:5111, Zenodo 10.5281/zenodo.13379129; CC BY 4.0. Recoloured and tiled as share of area. The dataset has no tiles over about 20 % of Sarawak (interior highlands) and over parts of the new countries; the app says so instead of showing zero. For Thailand, Myanmar, Cambodia and the Philippines it is an oil-palm-only map; for Laos, Vietnam, Timor-Leste and Singapore the app shows no oil-palm data.</li>
+<li><b>Burned area</b> (real): MCD64A1 v6.1 (Terra and Aqua MODIS), Giglio, L., Justice, C., Boschetti, L., Roy, D. (2021). <em>MODIS/Terra+Aqua Burned Area Monthly L3 Global 500 m SIN Grid V061</em>. NASA EOSDIS Land Processes DAAC. <a href="https://doi.org/10.5067/MODIS/MCD64A1.061">doi:10.5067/MODIS/MCD64A1.061</a> (no use restrictions; we recoloured and tiled it).</li>
+<li><b>Forest history and degradation</b>, tree-plantation conversion (real): Tropical Moist Forests (TMF) v1.2025, European Commission Joint Research Centre (JRC), <a href="https://forobs.jrc.ec.europa.eu/TMF">forobs.jrc.ec.europa.eu/TMF</a>; Vancutsem et al. 2021, <em>Science Advances</em> 7, eabe1603, <a href="https://doi.org/10.1126/sciadv.abe1603">doi:10.1126/sciadv.abe1603</a>. Free use with attribution: <b>Source: EC JRC</b>. Data aggregated and re-tiled by Abang Abang; this does not imply endorsement by the European Commission.</li>
+<li><b>Peat</b> (real): Gumbricht, T. et al. (2017), <em>Tropical and subtropical wetlands distribution v2.1</em>, CIFOR, <a href="https://doi.org/10.17528/CIFOR/DATA.00058">doi:10.17528/CIFOR/DATA.00058</a>; Gumbricht et al. 2017, <em>Global Change Biology</em> 23, 3581&ndash;3599. CC BY 4.0. Clipped, rasterised to tiles and recoloured.</li>
+<li><b>What cleared forest became</b> (real; layer &ldquo;What cleared forest became&rdquo;): Sims et al. (2025), <em>Global drivers of forest loss at 1 km resolution</em>, World Resources Institute / Google DeepMind, v1.3 (2001&ndash;2025), <em>Environmental Research Letters</em> 20(7) 074027, <a href="https://doi.org/10.1088/1748-9326/add606">doi:10.1088/1748-9326/add606</a>; data <a href="https://doi.org/10.5281/zenodo.19485190">doi:10.5281/zenodo.19485190</a>; <b>CC BY 4.0</b>. We recoloured and tiled it, one raster per class, and show a cell only where Hansen forest loss is recorded (at least 0.5 % of the cell). The map is built partly from fire data, so its &ldquo;wildfire&rdquo; class is not independent evidence about fire.</li>
+<li><b>Mines</b> (real data, <b>not shown in the app</b> since 15 Nov 2026: the layer &ldquo;Mines (about 2019)&rdquo; was removed from the layer list; the file stays published, see below): Maus et al. (2024), <em>Global mining deforestation footprint data from 2000 to 2019</em>, Zenodo <a href="https://doi.org/10.5281/zenodo.7307210">doi:10.5281/zenodo.7307210</a>, <b>ODbL 1.0</b>. The polygons are the Maus et al. 2022 mining polygons (imagery of about 2019) merged with OpenStreetMap mining areas. Contains information from OpenStreetMap, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>. We kept 4,023 polygons in the 11 countries, simplified to about 2 m, with the commodity list from the same record.</li>
+<li><b>Year land became oil palm, pulpwood or mining</b> (real; layers &ldquo;Became oil palm / pulpwood / mining (MapBiomas)&rdquo;): <em>MapBiomas Indonesia &ndash; Collection 4 time-series maps of land-use and land-cover</em> (version 2, 2000&ndash;2024), accessed 15 Nov 2026 via <a href="https://landy.mapbiomas.id/en/gee">landy.mapbiomas.id</a>; <b>CC BY-SA</b> (<a href="https://landy.mapbiomas.id/en/termsofuse">terms of use</a>). We derived, per 0.001&deg; cell (about 110 m), the first year the class held for two years in a row, the share of the cell converted, the share that was forest before and the share in 2024, and tiled the result for the map. Because the licence is share-alike, these derived tiles (<a href="../data-v4/mapbiomas/ATTRIBUTION.txt">attribution</a>, <a href="../data-v4/mapbiomas/MANIFEST.json">manifest</a>) are offered under CC BY-SA too. Years are about &plusmn;2 years; the oil-palm class is about 12 % smaller in area than Descals et al. (above).</li>
+<li><b>Forest loss to oil palm</b> overlap layer (<b>not shown in the app</b> since 15 Nov 2026; the tiles stay published): derived by us from Hansen and Descals (above); not a source dataset.</li>
+<li><span class="ph">Placeholder</span> <b>Forest alerts</b> (synthetic blobs for two months) and <b>pulpwood</b> (synthetic; the planned source is the Spatial Database of Planted Trees v2, WRI / Global Forest Watch, Richter et al. 2024, CC BY 4.0). The layer panel labels both "Placeholder tiles". The gridded harmonized-fire layer before 2012 is an empty slot for the model's output and shows nothing real.</li>
+</ul>
+<ul><li><b>Open data offered under ODbL 1.0</b>: the simplified region file <a href="../data-v4/regions.geojson">regions.geojson</a> is a derivative of OpenStreetMap-based boundaries and stays publicly available under the <a href="https://opendatacommons.org/licenses/odbl/1-0/">Open Database License 1.0</a>, &copy; OpenStreetMap contributors.</li>
+<li><b>Mine outlines offered under ODbL 1.0</b>: the simplified file <a href="../data-v4/mines/mines.geojson">mines.geojson</a> is a derivative of the Maus et al. 2024 database (which includes OpenStreetMap data) and stays publicly available under the <a href="https://opendatacommons.org/licenses/odbl/1-0/">Open Database License 1.0</a>, &copy; OpenStreetMap contributors.</li>
+</ul>
+<h2 class="disp">Models and SI tools</h2>
+<ul>
+<li>No third-party pretrained SI model is used. The harmonized counts on the map come from a ratio baseline, not a neural model. Our own research model (a shared encoder for MODIS and VIIRS) is in progress and is not shown in the app.</li>
+<li>Built with Super Intelligence (SI) assistance: the code, data processing, analysis and these pages were developed with Claude Code agents (Anthropic), under the author's direction and supervision, and checked by the team.</li>
+</ul>
+<p class="muted">No analytics, trackers or cookies. The only thing stored in your browser is your light/dark choice.</p>
+</main>
+<footer class="ftr">
+<span>Abang on Earth · NASA Space Apps Challenge 2026, Seoul</span>
+<span><a href="../credits/">Credits &amp; data sources</a> · No trackers, no cookies.</span>
+</footer>
+</div>
+</body></html>

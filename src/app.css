@@ -1,0 +1,315 @@
+/* Full-screen app: map under everything, floating panels over it. Tokens come from site.css. */
+:root{--panel:color-mix(in srgb,var(--bg) 90%,transparent);--bottom-h:0px;--gap:12px;--top:max(12px,env(safe-area-inset-top))}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none}
+body.fs{margin:0}
+#map{position:fixed;z-index:0;inset:0;width:100vw;height:100dvh}
+.maplibregl-ctrl-bottom-right,.maplibregl-ctrl-bottom-left{bottom:var(--bottom-h)!important;transition:bottom .2s}
+.maplibregl-ctrl-group{border-radius:12px;overflow:hidden}
+.maplibregl-ctrl-attrib{font-size:12px;background:var(--panel)!important;color:var(--body)!important;border-radius:10px}
+.maplibregl-ctrl-attrib a{color:var(--fg)!important}
+.maplibregl-ctrl-attrib-button{filter:none}
+.maplibregl-ctrl-group{background:var(--panel)!important}
+:root[data-theme=dark] .maplibregl-ctrl-attrib-button,:root[data-theme=dark] .maplibregl-ctrl-group button .maplibregl-ctrl-icon{filter:invert(1)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .maplibregl-ctrl-attrib-button,:root:not([data-theme=light]) .maplibregl-ctrl-group button .maplibregl-ctrl-icon{filter:invert(1)}}
+
+.topbar,.panel,.chip,#dock{background:var(--panel);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);border:1px solid var(--line);box-shadow:0 4px 20px rgba(0,0,0,.12)}
+.topbar{position:fixed;z-index:30;top:var(--top);left:max(var(--gap),env(safe-area-inset-left));right:max(var(--gap),env(safe-area-inset-right));height:56px;border-radius:16px;display:flex;align-items:center;justify-content:space-between;padding:0 8px 0 18px}
+.topbar .brand{font-size:20px;text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
+.topbar nav{display:flex;align-items:center;gap:0 20px;font-size:15px}
+.topbar nav a{text-decoration:none;padding:0 2px;min-height:44px;display:inline-flex;align-items:center;border-bottom:2px solid transparent}
+.topbar nav a[aria-current]{font-weight:600;color:var(--accent);border-bottom-color:var(--accent)}
+.btn{font:inherit;font-size:14px;color:var(--fg);background:transparent;border:1px solid var(--line);border-radius:999px;padding:0 16px;min-height:44px;cursor:pointer}
+.btn:hover{border-color:var(--fg)}
+.menu{display:none}
+
+.chip{position:fixed;z-index:25;top:calc(var(--top) + 56px + 8px);left:50%;transform:translateX(-50%);max-width:calc(100vw - 24px);padding:6px 14px;border-radius:999px;font-size:13px;font-weight:500;color:var(--fg);display:flex;align-items:center;gap:8px;white-space:nowrap}
+.chip::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);flex:none}
+.chip[hidden]{display:none}
+
+#dock{display:contents}
+.sheet-head{display:none}
+.panel{position:fixed;z-index:20;border-radius:16px;color:var(--fg);font-size:15px;line-height:1.45}
+.ph-row{display:flex;align-items:center;justify-content:space-between;padding:10px 10px 0 16px}
+.collapse{font:inherit;font-size:13px;color:var(--muted);background:none;border:1px solid var(--line);border-radius:999px;min-height:32px;padding:0 12px;cursor:pointer}
+.collapse:hover{color:var(--fg);border-color:var(--fg)}
+.pbody{padding:6px 16px 16px;overflow-y:auto;overscroll-behavior:contain}
+.panel[data-collapsed] .pbody{display:none}
+.panel[data-collapsed] .ph-row{padding-bottom:10px}
+.small{font-size:13px;line-height:1.45;margin:8px 0 0}
+
+.p-layers{top:calc(var(--top) + 56px + var(--gap));left:max(var(--gap),env(safe-area-inset-left));width:360px;display:flex;flex-direction:column;max-height:calc(100dvh - var(--top) - 56px - var(--gap) * 3 - var(--bottom-h))}
+.p-details{top:calc(var(--top) + 56px + var(--gap));right:max(var(--gap),env(safe-area-inset-right));width:272px;display:flex;flex-direction:column;max-height:calc(100dvh - var(--top) - 56px - var(--gap) * 3 - var(--bottom-h))}
+.p-timeline{left:max(var(--gap),env(safe-area-inset-left));right:max(var(--gap),env(safe-area-inset-right));bottom:max(var(--gap),env(safe-area-inset-bottom));padding:8px 16px 8px}
+
+.eyebrow{margin:0;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.field{display:flex;align-items:center;gap:10px;margin:4px 0 0}
+.field span{flex:none;width:62px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+select{font:inherit;font-size:14px;color:var(--fg);min-height:38px;flex:1;min-width:0;width:100%;padding:0 34px 0 12px;text-overflow:ellipsis;border:1px solid var(--line);border-radius:12px;cursor:pointer;
+  appearance:none;-webkit-appearance:none;background-color:color-mix(in srgb,var(--bg) 70%,transparent);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%238A867C' stroke-width='1.6'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center}
+select:hover{border-color:var(--fg)}
+section[aria-labelledby=lh]{margin-top:10px}
+.sec-head{display:flex;align-items:center;gap:8px;min-height:34px}
+.sec-head .info{margin:-3px 0}
+.sec-head .eyebrow{flex:1}
+.sec-head .linkbtn{margin:0;font-size:13px}
+.layers{margin-top:0}
+.lyr{border-bottom:1px solid var(--line);position:relative}
+.lyr-line{display:flex;align-items:center;gap:6px;min-height:40px}
+.grip{position:relative;flex:none;width:26px;height:44px;display:grid;place-items:center;background:none;border:0;color:var(--muted);cursor:grab;touch-action:none;border-radius:8px;padding:0}
+.grip:hover{color:var(--fg)}
+.lyr.dragging{opacity:.55;background:color-mix(in srgb,var(--accent) 8%,transparent)}
+.lyr.dragging .grip{cursor:grabbing}
+.lyr.drop-before::before,.lyr.drop-after::after{content:"";position:absolute;left:0;right:0;height:3px;border-radius:2px;background:var(--accent);z-index:2}
+.lyr.drop-before::before{top:-2px}.lyr.drop-after::after{bottom:-2px}
+.lyr-main{display:flex;align-items:center;gap:10px;flex:1;min-width:0;min-height:40px;padding:0;cursor:pointer}
+.lyr-main.static{cursor:default}
+.linkbtn{font:inherit;color:var(--accent);background:none;border:0;padding:0;margin-left:4px;text-decoration:underline;cursor:pointer;min-height:24px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.lyr-main input{width:22px;height:22px;margin:0;flex:none;accent-color:var(--accent);cursor:pointer}
+.lyr-main .cbsp{flex:none;width:22px}
+.lyr .sw{flex:none;width:14px;height:14px;border-radius:4px;background:var(--c)}
+.lyr .nm{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px;font-weight:600;line-height:1.3}
+.kchip{flex:none;font-size:10.5px;line-height:1.5;letter-spacing:.06em;text-transform:uppercase;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:0 7px;white-space:nowrap}
+.kchip[data-kind=gap]{color:var(--accent);border-color:var(--accent)}
+.kchip[hidden]{display:none}
+.info{flex:none;width:44px;height:44px;display:grid;place-items:center;background:none;border:0;padding:0;cursor:pointer;color:var(--muted);border-radius:50%}
+.info span{width:22px;height:22px;border:1.5px solid currentColor;border-radius:50%;display:grid;place-items:center;font:italic 600 13px/1 "Space Grotesk",Inter,serif}
+.info:hover,.info[aria-expanded=true]{color:var(--fg)}
+.info[aria-expanded=true] span{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+button:focus-visible,select:focus-visible,input:focus-visible,a:focus-visible,.pop:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.lyr .ls,.lyr .gap{display:block;margin:-4px 0 0;padding:0 0 6px 32px;font-size:12px;line-height:1.35}
+.lyr .ls{color:var(--accent)}
+.lyr .ls:empty,.lyr .ls.routine{display:none}
+.lyr .gap{color:var(--muted);font-style:italic}.lyr .gap[hidden]{display:none}
+.lyr .ls.routine{display:block;position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);padding:0;margin:0}
+.op-row{display:none;align-items:center;gap:10px;padding:0 0 2px 32px;font-size:12px;color:var(--muted)}
+.lyr.on .op-row{display:flex}
+input[type=range]{width:100%;margin:0;accent-color:var(--accent);cursor:pointer;min-height:44px}
+.op-row input{min-height:26px}
+
+.p-details h2{margin:2px 0 0;font-size:22px;line-height:1.2}
+.nums{margin:12px 0 0;display:grid;gap:8px}
+.nums div{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-top:1px solid var(--line);padding-top:8px}
+.nums dt{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.nums dd{margin:0;font-weight:600;font-size:16px;text-align:right}
+#d-cls{flex:none;white-space:nowrap}
+#d-clp{flex:0 0 auto;max-width:62%;text-align:right} /* flex-shrink 0: a share of two numbers ("0.5 % / 0.2 %") stayed on one line; it wrapped one character per line when the long label squeezed it */
+.legend{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin-top:14px}
+.legend i{flex:1;height:10px;border-radius:5px;background:linear-gradient(90deg,var(--heat0),var(--heat1),var(--heat2),var(--heat3))}
+
+/* timeline */
+.tl-row{display:flex;align-items:center;gap:14px}
+.play{flex:none;width:48px;height:48px;border-radius:50%;border:1px solid var(--fg);background:var(--fg);color:var(--btn-fg);font-size:16px;cursor:pointer;display:grid;place-items:center}
+.play:hover{background:var(--accent);border-color:var(--accent)}
+.play:disabled{opacity:.4;cursor:not-allowed}
+.tl-month{flex:none;display:flex;flex-direction:column;min-width:112px;line-height:1.1}
+.tl-month output{font-size:28px;letter-spacing:-.02em}
+.tl-slider{flex:1;min-width:0;position:relative}
+.ticks{position:relative;height:16px;margin:-8px 9px 0;font-size:11px;color:var(--muted)}
+.ticks span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+.ticks span::before{content:"";position:absolute;left:50%;top:-6px;height:5px;border-left:1px solid var(--muted)}
+.calbtn{flex:none}
+.drawer{display:none;margin-bottom:10px}
+.drawer[data-open="1"]{display:block}
+.cal{display:grid;grid-template-columns:16px repeat(26,minmax(0,1fr));gap:2px;font-size:10px;line-height:1}
+.cal .yl{color:var(--muted);text-align:center;display:flex;align-items:center;justify-content:center;height:10px;white-space:nowrap}
+.cal .yh{height:12px;color:var(--muted);text-align:center;overflow:visible;white-space:nowrap}
+.cal .c{height:8px;border-radius:2px;cursor:pointer}
+.cal .c.sel{outline:2px solid var(--fg);outline-offset:1px;position:relative;z-index:1}
+
+@media(min-width:1200px) and (min-height:601px) and (max-height:860px) and (pointer:fine){.hint{display:none}.p-details .nums{margin-top:8px}}
+
+/* phone: top bar collapses, panels become one bottom sheet with tabs */
+@media(max-width:480px),(max-height:560px){
+  .menu{display:inline-flex;align-items:center}
+  .topbar nav{display:none;position:absolute;top:64px;right:0;left:0;flex-direction:column;align-items:stretch;gap:0;padding:8px 16px 12px;border-radius:16px;background:var(--bg);border:1px solid var(--line);box-shadow:0 4px 20px rgba(0,0,0,.12)}
+  .topbar nav[data-open]{display:flex}
+  .topbar nav a{border-bottom:1px solid var(--line);min-height:48px}
+  .topbar nav .btn{margin-top:10px}
+  .topbar{padding:0 8px 0 16px}
+}
+/* dock layout: phones, tablets (both orientations) and short windows */
+@media(max-width:1199px),(max-height:600px),(pointer:coarse){
+  .chip{left:max(var(--gap),env(safe-area-inset-left));transform:none;font-size:12px}
+  #dock{display:flex;flex-direction:column;position:fixed;z-index:20;left:0;right:0;bottom:0;padding-bottom:env(safe-area-inset-bottom);border-bottom:0;border-radius:20px 20px 0 0;box-shadow:0 -4px 20px rgba(0,0,0,.14)}
+  .sheet-head{display:block}
+  .grab{display:flex;justify-content:center;align-items:center;width:100%;height:24px;background:none;border:0;padding:0;cursor:grab;touch-action:none}
+  .grab i{width:40px;height:4px;border-radius:2px;background:var(--muted);opacity:.6}
+  .tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 12px 8px}
+  .tabs button{font:inherit;font-size:14px;color:var(--muted);min-height:44px;background:none;border:1px solid var(--line);border-radius:999px;cursor:pointer}
+  .tabs button[aria-selected=true]{color:var(--btn-fg);background:var(--fg);border-color:var(--fg)}
+  #dock .panel{position:static;display:none;width:auto!important;max-height:none!important;background:none;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none;border-radius:0;padding:0}
+  #dock[data-open="1"][data-tab=layers] .p-layers,#dock[data-open="1"][data-tab=details] .p-details{display:flex}
+  #dock[data-open="1"][data-tab=timeline] .p-timeline{display:block}
+  #dock .p-layers .pbody,#dock .p-details .pbody{max-height:min(40dvh,360px);padding:2px 16px 16px}
+  #dock .p-layers .pbody{max-height:min(40dvh,380px)} /* was 64dvh = 73 % of a phone screen with the tab row; the map must stay usable while layers are toggled */
+  .ph-row{display:none}
+  .p-timeline{padding:0 16px 8px!important}
+  .tl-row{flex-wrap:wrap;gap:4px 12px}
+  .tl-slider{order:3;flex:1 0 100%}
+  .tl-month{flex:1;min-width:0}
+  .calbtn{order:2}
+  .cal{gap:1px}
+  .cal .yl,.cal .yh{height:10px;font-size:9px}
+  .cal .c{height:9px}
+  .drawer{margin-bottom:6px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+:root{--hatch:rgba(255,255,255,.6)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--hatch:rgba(0,0,0,.55)}}
+:root[data-theme=dark]{--hatch:rgba(0,0,0,.55)}
+.flag{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.02em}
+.flag.est{color:var(--accent);font-weight:600}
+.est-sw{display:inline-block;width:14px;height:10px;border-radius:2px;vertical-align:-1px;background:repeating-linear-gradient(135deg,var(--hatch) 0 1.5px,transparent 1.5px 3.5px),var(--heat2);border:1px solid var(--line)}
+.key{margin:8px 0 0;line-height:1.35}
+.nums .harm dd{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+[hidden]{display:none!important}
+.fire-legend{margin-top:10px}.fire-legend .legend{margin-top:4px}
+.fl-m{background:linear-gradient(90deg,#FDE68A,#F59E0B,#D97706,#92400E)!important}.fl-v{background:linear-gradient(90deg,#FBCFE8,#F43F5E,#BE123C,#4C0519)!important}
+.lyr.is-ph .nm{opacity:.8}
+.lyr .cls-row{display:none;flex-wrap:wrap;gap:4px 12px;padding:0 0 6px 32px;font-size:12px}.lyr .cls{display:inline-flex;align-items:center;gap:5px;cursor:pointer}.lyr .cls i{width:10px;height:10px;border-radius:3px}.lyr .cls input{margin:0}
+.lyr.on .cls-row{display:flex}
+.lyr.na{opacity:.55}.lyr.na .ls{color:var(--muted);font-style:italic}
+.lyr.na .ls.routine{position:static;width:auto;height:auto;clip:auto}
+/* tier B: warning line (VIIRS-equivalent not shown) and the small note under a details row (e.g. no palm data over part of the area) */
+.warn{margin:8px 0 0;padding:8px 10px;border-left:3px solid var(--accent);border-radius:6px;background:color-mix(in srgb,var(--accent) 9%,transparent);color:var(--fg);line-height:1.4}
+.warn[hidden]{display:none}
+.gapnote{color:var(--muted);font-size:12px;font-style:italic;line-height:1.35}
+.field[hidden]{display:none}
+/* map credits: visible, wrapped, and kept clear of the details panel and the timeline */
+.maplibregl-ctrl-attrib{max-width:min(46vw,640px);line-height:1.35}
+@media(min-width:1200px) and (min-height:601px) and (pointer:fine){.maplibregl-ctrl-attrib{margin-right:296px!important;max-width:max(300px,min(640px,calc(100vw - 296px - 380px)))}} /* sit between the details panel (right) and the map panel (left) */
+.maplibregl-ctrl-attrib.maplibregl-compact{max-width:calc(100vw - 24px)}
+@media(max-width:1199px),(max-height:600px),(pointer:coarse){.maplibregl-ctrl-attrib-inner{font-size:11px}}
+
+/* info popover */
+.pop,.pop-back{position:fixed}
+.pop{z-index:60;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.22);font-size:14px;line-height:1.5;display:flex;flex-direction:column;overflow:hidden}
+.pop[hidden],.pop-back[hidden]{display:none}
+.pop-head{display:flex;align-items:flex-start;gap:8px;padding:12px 8px 4px 16px}
+.pop-head h2{flex:1;margin:6px 0 0;font:600 17px/1.25 "Space Grotesk",Inter,sans-serif;letter-spacing:-.01em}
+.pop-x{flex:none;width:40px;height:40px;display:grid;place-items:center;background:none;border:0;border-radius:50%;color:var(--muted);cursor:pointer}
+.pop-x:hover{color:var(--fg)}
+.pop-body{padding:0 16px 16px;overflow-y:auto;overscroll-behavior:contain}
+.pop-body p{margin:8px 0 0}
+.pop-kind{font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--muted)}
+.pop-kind.ph{color:var(--accent)}
+.pop-now{color:var(--accent);padding:6px 10px;border-left:3px solid var(--accent);border-radius:6px;background:color-mix(in srgb,var(--accent) 9%,transparent)}
+.pop-dl{margin:12px 0 0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px}
+.pop-dl dt{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:2px}
+.pop-dl dd{margin:0}
+.pop-long h3{margin:14px 0 0;font:600 14px/1.3 "Space Grotesk",Inter,sans-serif}
+.pop-more,.pop-src{font-size:13px;color:var(--muted)}
+.pop-more a,.pop-src a{color:var(--fg)}
+.pop-back{inset:0;z-index:59;background:rgba(0,0,0,.45)}
+.pop.sheet{left:0!important;right:0!important;bottom:0!important;top:auto!important;width:auto!important;max-height:min(75dvh,640px)!important;border-radius:20px 20px 0 0;padding-bottom:env(safe-area-inset-bottom)}
+@media(min-width:1200px) and (min-height:601px) and (pointer:fine){.pop.sheet{left:50%!important;right:auto!important;bottom:auto!important;top:50%!important;width:min(440px,calc(100vw - 24px))!important;transform:translate(-50%,-50%);border-radius:16px}}
+/* mine-outline pop-up: follows the theme tokens */
+.mine-pop .maplibregl-popup-content{background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:12px;font-size:14px;line-height:1.45;padding:12px 28px 12px 14px;box-shadow:0 4px 20px rgba(0,0,0,.18)}
+.mine-pop .maplibregl-popup-close-button{color:var(--body);font-size:20px;min-width:32px;min-height:32px}
+.mine-pop .maplibregl-popup-tip{border-top-color:var(--bg);border-bottom-color:var(--bg)}
+.mine-pop .mine-note{color:var(--body);font-size:12.5px}
+
+/* scroll cue: more content below */
+.pbody[data-more]{-webkit-mask-image:linear-gradient(calc(100% - 32px),transparent);mask-image:linear-gradient(calc(100% - 32px),transparent)}
+/* touch targets >= 44 px: the grip's hit area grows into the panel padding on its left, the drawn icon stays */
+.grip::after{content:"";position:absolute;inset:0 -2px 0 -16px}
+@media(max-width:1199px),(max-height:600px),(pointer:coarse){.collapse{min-height:44px}}
+.skip{position:fixed;left:8px;top:-60px;z-index:60;background:var(--fg);color:var(--btn-fg);padding:10px 16px;border-radius:10px;font-size:14px;text-decoration:none}.skip:focus{top:8px}
+
+/* Metric / country / region: one summary line on phones, always open on wider screens */
+.sel>summary{list-style:none;cursor:pointer;display:none;align-items:center;justify-content:space-between;gap:8px;min-height:44px;padding:0 12px;margin:0 0 6px;border:1px solid var(--line);border-radius:12px;font-size:14px;color:var(--fg)}
+.sel>summary::-webkit-details-marker{display:none}
+.sel>summary::after{content:"Change";color:var(--muted);font-size:13px}
+.sel[open]>summary::after{content:"Hide"}
+.sel #sel-txt{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:1199px),(max-height:600px),(pointer:coarse){.sel>summary{display:flex}}
+@media(max-height:600px) and (min-height:481px){#dock .p-layers .pbody{max-height:28dvh}#dock .p-details .pbody{max-height:28dvh}} /* short windows (200 % zoom): leave the map its half */
+/* the long "followed by oil palm" label and its two-number value: label gets the full row, value sits under it on the right (was an 8-line label squeezed by the value) */
+.nums div:has(#d-clp){flex-wrap:wrap;row-gap:2px}.nums div:has(#d-clp) dt{flex:1 1 12em}.nums div:has(#d-clp) dd{margin-left:auto}
+
+/* tablets (700-1199 px wide): the bottom dock is a centred sheet, not a full-width bar */
+@media(max-width:1199px) and (min-width:700px),(max-height:600px) and (min-width:700px),(pointer:coarse) and (min-width:700px){#dock{left:50%;right:auto;width:min(760px,calc(100vw - 24px));transform:translateX(-50%)}}
+/* short landscape (phones on their side, <= 480 px high): left side sheet, the map keeps the right */
+@media(max-height:480px) and (min-width:600px){
+  #dock{left:0;right:auto;top:calc(var(--top) + 56px + var(--gap));bottom:0;width:min(380px,46vw);transform:none;border-radius:0 20px 0 0;overflow:hidden}
+  #dock .panel{flex:1;min-height:0}
+  #dock .p-layers .pbody,#dock .p-details .pbody{max-height:none;flex:1;min-height:0;overflow:auto}
+  .maplibregl-ctrl-bottom-left{margin-left:var(--side-w,0px)}
+}
+/* numbers with their unit stay on one line ("1,168,168 ha"); the labels carry the period now and wrap instead */
+.nums dd{white-space:nowrap}.nums dd small{white-space:normal;display:inline-block;max-width:15em}.nums dd#d-clp{white-space:normal}
+
+/* touch targets >= 44 px on dock layouts and touch screens: class check boxes in two columns, map buttons, selects */
+@media(max-width:1199px),(max-height:600px),(pointer:coarse){
+  .lyr .cls-row{display:none;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 8px;padding-left:32px}.lyr.on .cls-row{display:grid}
+  .lyr .cls{min-height:44px;font-size:13px}
+  .maplibregl-ctrl-group button,.maplibregl-ctrl-attrib-button{width:44px!important;height:44px!important}
+  .maplibregl-ctrl-attrib-button{background-repeat:no-repeat!important;background-position:center!important;background-size:24px 24px!important} /* MapLibre draws the icon as a 24 px image; in a 44 px box it tiled 2x2 */ /* !important: MapLibre's own stylesheet sets 29 px with a more specific selector */
+  select{min-height:44px}
+  input[type=range],.op-row input,.lyr-main{min-height:44px}
+  .grab{position:relative}.grab::after{content:"";position:absolute;inset:-10px 0}
+}
+/* metric picker + ramp inside the Provinces row; Details sections */
+.metric-box{padding:0 0 8px 32px}.metric-box .field{margin:0 0 6px}.metric-box .field span{width:auto}.metric-box select{flex:1;min-width:0}
+.dsec{margin:10px 0 0;border-top:1px solid var(--line);padding-top:6px}
+.dsec>summary{cursor:pointer;font-size:13px;font-weight:600;letter-spacing:.04em;min-height:32px;display:flex;align-items:center}
+.nums .hl{background:color-mix(in srgb,var(--accent) 12%,transparent);box-shadow:-6px 0 0 color-mix(in srgb,var(--accent) 12%,transparent),6px 0 0 color-mix(in srgb,var(--accent) 12%,transparent);border-radius:4px}
+#d-chip{margin:6px 0 0;font-weight:600}
+/* layer panel (src/layerpanel) in the sidebar */
+.sec-head h3.eyebrow{margin:0}
+.lp-allhead{margin-top:14px}
+.lp-extra.lyr{border:0;position:static}
+.lp-extra .ls,.lp-extra .gap{padding-left:0;margin-top:0}
+.lp-extra .cls-row{padding-left:0}
+.lp-extra .metric-box{padding-left:0}
+.lp-picker:has(> .lp-extra.empty){padding:0}
+
+.lp-panel .lp-picker select{width:100%}
+.lp-row .lp-name{flex:1 1 0}
+/* layer panel (src/layerpanel) in the sidebar */
+.sec-head h3.eyebrow{margin:0}
+.lp-allhead{margin-top:14px}
+.lp-extra.lyr{border:0;position:static}
+.lp-extra .ls,.lp-extra .gap{padding-left:0;margin-top:0}
+.lp-extra .cls-row{padding-left:0}
+.lp-extra .metric-box{padding-left:0}
+.lp-picker:has(> .lp-extra.empty){padding:0}
+
+.lp-panel .lp-picker select{width:100%}
+.lp-panel .lp-handle,.lp-panel .lp-info,.lp-panel .lp-off{width:44px;height:44px} /* 44 px touch targets */
+.lp-panel .lp-row{gap:0 4px}
+.lp-panel .lp-picker select{min-height:44px}
+
+/* variant picker + legend of a layer row */
+.lp-extra .var-row{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:12px;color:var(--muted)}
+.lp-extra .var-row select{flex:1;min-width:0;width:auto}
+.lp-extra .var-legend{margin-top:6px;font-size:12px;color:var(--muted)}
+.lp-extra .var-legend .vl-t{margin-bottom:4px;line-height:1.3}
+.lp-extra .var-legend ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:4px 10px}
+.lp-extra .var-legend li{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.lp-extra .var-legend i{width:14px;height:10px;border-radius:2px;border:1px solid color-mix(in srgb,var(--fg) 30%,transparent)}
+.lp-row[data-id^="mb_"] .lp-name{white-space:normal;overflow:visible} /* the "Indonesia only" chip leaves little width: let the long names wrap */
+/* sub-selection boxes of a fire layer; a disabled one is greyed with its hint beside it */
+.lp-extra .cls.dis{opacity:.6;cursor:not-allowed}.lp-extra .cls.dis input{cursor:not-allowed}
+.lp-extra .cls-hint{flex:1 0 100%;font-size:12px;line-height:1.35;color:var(--muted);font-style:italic}
+/* a layer name is never cut off in the "On the map" list: it wraps instead of ending in an ellipsis */
+.lp-panel .lp-row .lp-name{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere}
+/* a row shows controls only. Status and gap sentences live in the (i) panel ("This month"); the disabled-class hint is read by assistive technology only */
+.lp-extra.lyr .ls,.lp-extra.lyr .ls.routine,.lp-extra.lyr .gap{display:none}
+.lp-extra.lyr .cls-hint{display:none}
+/* a layer with nothing for the selected month: dimmed name and swatch, dot on its (i) button (the reason is in the (i) panel) */
+.lp-row.lp-na .lp-name,.lp-row.lp-na .lp-sw,.lp-crow.lp-na .lp-name,.lp-crow.lp-na .lp-sw{opacity:.5}
+/* a layer with something important to know (its `important` key, Indonesia only, no data this month ...): red badge at the top right of its (i) button; the "!" makes it readable without colour, the aria-label says "important information" */
+.lp-row.lp-imp .lp-info,.lp-crow.lp-imp .lp-info{position:relative}
+.lp-row.lp-imp .lp-info::after,.lp-crow.lp-imp .lp-info::after{content:"!";position:absolute;top:6px;right:5px;width:15px;height:15px;border-radius:50%;background:#C62828;color:#fff;font:700 10px/15px system-ui,sans-serif;text-align:center;border:1.5px solid var(--bg);box-sizing:content-box;margin:-1.5px}
+
+/* the important block at the top of an (i) panel: distinct background, red edge, readable in light and dark */
+.lp-pop-imp{margin:8px 0 0;padding:10px 12px;border-left:4px solid #C62828;border-radius:6px;background:color-mix(in srgb,#C62828 13%,var(--bg));color:var(--fg)}
+.lp-pop-imp strong{display:block;font:700 12px/1.2 system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#B3261E}
+:root[data-theme=dark] .lp-pop-imp strong{color:#FF8A80}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]) .lp-pop-imp strong{color:#FF8A80}}
+.lp-pop-imp p{margin:6px 0 0}

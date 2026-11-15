@@ -1,0 +1,77 @@
+/* Layer panel components: OnTheMapList, LayerCatalogue, InfoPopover. Every class is prefixed lp- so nothing here touches app.css.
+ * Uses the site tokens (--bg --fg --muted --line --accent, src/site.css); light and dark follow the same switches as the app (prefers-color-scheme and data-theme). */
+.lp-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.lp-panel{color:var(--fg);font-size:15px;line-height:1.45}
+.lp-panel button,.lp-panel input,.lp-panel select,.lp-pop button,.lp-pop input{font:inherit;color:inherit}
+.lp-panel :focus-visible,.lp-pop :focus-visible,.lp-pop:focus-visible,.lp-empty:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.lp-sec{margin:14px 0 6px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:8px}
+.lp-sec:first-child{margin-top:0}
+.lp-sw{flex:none;width:14px;height:14px;border-radius:4px;background:var(--accent);border:1px solid color-mix(in srgb,var(--fg) 18%,transparent)}
+.lp-name{min-width:0;font-size:15px;font-weight:600;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lp-tag{flex:none;font-size:10.5px;line-height:1.5;letter-spacing:.06em;text-transform:uppercase;font-weight:600;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:0 7px;white-space:nowrap}
+.lp-info,.lp-off,.lp-handle,.lp-pop-x{flex:none;display:grid;place-items:center;width:36px;height:44px;background:none;border:0;border-radius:10px;color:var(--muted);cursor:pointer;padding:0}
+.lp-info:hover,.lp-off:hover,.lp-handle:hover,.lp-pop-x:hover{color:var(--fg)}
+.lp-info[aria-expanded=true]{color:var(--accent)}
+
+/* On the map */
+.lp-stack{list-style:none;margin:0;padding:0}
+.lp-row{position:relative;display:flex;flex-wrap:wrap;align-items:center;gap:0 8px;min-height:48px;border-bottom:1px solid var(--line);background:var(--bg)}
+.lp-row .lp-name{flex:1 1 0}
+.lp-handle{width:32px;cursor:grab;touch-action:none;-webkit-user-select:none;user-select:none}
+.lp-handle:active,.lp-sorting .lp-handle{cursor:grabbing}
+.lp-handle[aria-pressed=true]{color:var(--accent)}
+.lp-row.lp-grabbed{z-index:1;background:color-mix(in srgb,var(--accent) 12%,var(--bg));box-shadow:0 0 0 2px var(--accent) inset,0 6px 18px rgba(0,0,0,.18)}
+.lp-sorting{-webkit-user-select:none;user-select:none}
+.lp-picker{flex:1 0 100%;padding:0 4px 10px 40px;min-width:0}
+.lp-picker select{width:100%}
+.lp-empty{margin:6px 0;padding:10px 12px;border:1px dashed var(--line);border-radius:12px;color:var(--muted);font-size:14px}
+.lp-empty[hidden]{display:none}
+
+/* Catalogue */
+.lp-searchwrap{margin:0 0 8px}
+.lp-search{width:100%;min-height:44px;padding:0 12px;border:1px solid var(--line);border-radius:12px;background:color-mix(in srgb,var(--bg) 70%,transparent);font-size:14px}
+.lp-search:hover{border-color:var(--fg)}
+.lp-group{border-bottom:1px solid var(--line)}
+.lp-group[hidden],.lp-gbody[hidden],.lp-crow[hidden],.lp-nomatch[hidden],.lp-picker[hidden],.lp-tag[hidden],.lp-sw[hidden]{display:none}
+.lp-gh{margin:0;font:inherit}
+.lp-gbtn{width:100%;display:flex;align-items:center;gap:8px;min-height:44px;padding:0 4px;background:none;border:0;border-radius:10px;cursor:pointer;text-align:left}
+.lp-gbtn:hover .lp-glabel{color:var(--accent)}
+.lp-gbtn[aria-disabled=true]{cursor:default}
+.lp-caret{flex:none;display:grid;place-items:center;width:16px;color:var(--muted);transition:transform .15s}
+.lp-open .lp-caret{transform:rotate(90deg)}
+.lp-glabel{flex:1;font-weight:600;font-size:15px}
+.lp-count{flex:none;font-size:12px;color:var(--muted);white-space:nowrap}
+.lp-count.lp-has{color:var(--accent);font-weight:600}
+.lp-gbody{list-style:none;margin:0;padding:0 0 6px}
+.lp-crow{display:flex;align-items:center;gap:8px;min-height:44px;padding-left:24px}
+.lp-clabel{flex:1;min-width:0;display:flex;align-items:center;gap:10px;min-height:44px;cursor:pointer}
+.lp-cb{width:22px;height:22px;margin:0;flex:none;accent-color:var(--accent);cursor:pointer}
+.lp-cb:disabled{cursor:not-allowed}.lp-cb:disabled~.lp-name{color:var(--muted)}
+.lp-clabel .lp-name{font-weight:500;white-space:normal;overflow:visible}
+.lp-nomatch{margin:8px 4px;color:var(--muted);font-size:14px}
+
+/* (i) popover */
+.lp-pop,.lp-back{position:fixed}
+.lp-pop{z-index:60;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.22);font-size:14px;line-height:1.5;display:flex;flex-direction:column;overflow:hidden;max-height:min(80vh,560px)}
+.lp-pop[hidden],.lp-back[hidden]{display:none}
+.lp-pop-head{display:flex;align-items:flex-start;gap:8px;padding:12px 8px 4px 16px}
+.lp-pop-head h2{flex:1;margin:6px 0 0;font:600 17px/1.25 "Space Grotesk",Inter,sans-serif;letter-spacing:-.01em}
+.lp-pop-x{width:40px;height:40px;border-radius:50%}
+.lp-pop-body{padding:0 16px 16px;overflow-y:auto;overscroll-behavior:contain}
+.lp-pop-body p{margin:8px 0 0}
+.lp-pop-sec h3{margin:14px 0 0;font:600 14px/1.3 "Space Grotesk",Inter,sans-serif}
+.lp-legend{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:4px}
+.lp-legend li{display:flex;align-items:center;gap:8px}
+.lp-pop-dl{margin:12px 0 0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px}
+.lp-pop-dl dt{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:2px}
+.lp-pop-dl dd{margin:0;overflow-wrap:anywhere}
+.lp-opacity{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);display:grid;grid-template-columns:auto 1fr 3.5em;align-items:center;gap:10px}
+.lp-opacity label{font-weight:600}
+.lp-opacity input[type=range]{width:100%;min-height:44px;margin:0;accent-color:var(--accent);cursor:pointer}
+.lp-op-val{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.lp-back{inset:0;z-index:59;background:rgba(0,0,0,.45)}
+/* narrow screens: bottom sheet */
+.lp-pop.lp-sheet{left:0;right:0;bottom:0;top:auto;width:auto;max-height:80vh;border-radius:16px 16px 0 0;border-width:1px 0 0;padding-bottom:env(safe-area-inset-bottom)}
+@media(prefers-reduced-motion:no-preference){.lp-pop.lp-sheet:not([hidden]){animation:lp-up .18s ease-out}}
+@keyframes lp-up{from{transform:translateY(24px);opacity:0}}
+.lp-picker select{min-height:40px;padding:0 10px;border:1px solid var(--line);border-radius:10px;background:color-mix(in srgb,var(--bg) 70%,transparent);font-size:14px}
