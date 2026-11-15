@@ -22,7 +22,7 @@
 <section class="hero" id="top">
 <p class="eyebrow">NASA Space Apps Challenge 2026 · Seoul</p>
 <h1 class="disp">MODIS and VIIRS fires <span data-coverage-prep>in</span> <span data-coverage>Indonesia</span>, 2001 to today.</h1>
-<p class="lede">Two satellites count the same fires very differently: VIIRS reports about 5 times more detections in Indonesia. We map both, month by month, and put them on one scale with a simple baseline, with its error stated. Underneath: forest loss, oil palm, peat and burned area.</p>
+<p class="lede">Two satellites count the same fires very differently: VIIRS reports about 5 times more detections in Indonesia. We map both, month by month, and harmonize them into one burning activity calendar for any country or province, with the error stated. A convolutional model, trained on real pairs of MODIS and VIIRS scenes, draws VIIRS-style fire points for 2002 to 2012, before VIIRS existed. Underneath: forest loss, oil palm, peat and burned area.</p>
 <div class="ctas">
 <a class="pill solid" href="app/">Open the map</a>
 <a class="pill" href="#project">What is built</a>
@@ -51,9 +51,9 @@
 
 <section class="band two" id="research" aria-labelledby="research-h">
 <div class="stack">
-<p class="eyebrow">The model research</p>
-<h2 class="disp" id="research-h">Can a learned model beat the baseline?</h2>
-<p class="body">We trained a shared encoder for MODIS and VIIRS on pairs of images taken minutes apart over the same ground. We selected 1,017 such pairs; 971 of them gave tiles, and we kept 32,914 tiles. This is research in progress. We ran the model on 46,125 Aqua MODIS night scenes, and the map shows the result for July 2002 to January 2012 as the layer <b>Harmonized VIIRS</b>. It is experimental and night only; the full evaluation is in the technical report. The charts and counts still use the ratio baseline.</p>
+<p class="eyebrow">Our model</p>
+<h2 class="disp" id="research-h">A convolutional model that reads MODIS and predicts VIIRS.</h2>
+<p class="body">We aligned <b>1,017 pairs</b> of MODIS and VIIRS night scenes of the same place, taken less than 30 minutes apart, on one 375 m grid; 971 of them gave 32,914 training tiles. A small convolutional network (438,678 parameters) learns from these pairs to predict the VIIRS radiance of each 375 m cell from the raw MODIS radiance. To our knowledge, and within our documented search, it is the first learned model of this kind. We ran it on 46,125 Aqua MODIS night scenes, and the map shows the result for July 2002 to January 2012 as the layer <b>Harmonized VIIRS</b>: <b>608,298 fire points</b> for years before VIIRS existed. It is experimental and night only; the full evaluation is in the technical report. The charts and counts use the ratio baseline.</p>
 </div>
 <div class="stack">
 <p class="eyebrow">What we found about forest, fire and palm</p>
