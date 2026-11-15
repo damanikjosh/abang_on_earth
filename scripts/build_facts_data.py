@@ -12,6 +12,7 @@ import json, hashlib, pathlib, sys, html
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 MON = ROOT / "public/data-v4/monthly.json"
+MAN = ROOT / "public/data-v4/manifest.json"
 LINKS = ROOT / "scripts/facts_links.json"
 OUT = ROOT / "scripts/facts_data.json"
 INDEX = ROOT / "index.html"
@@ -25,7 +26,6 @@ FACTBOOK = {
     "payoff": {"jump_glued": 5.04, "step_scaled": 1.04, "heldout_mean_pct": 5.7, "heldout_worst_pct": 15, "y2012_high_pct": 11},
     "seasons": {"months_apart": 5.9, "mainland_febapr_pct": 75, "indonesia_augoct_pct": 65, "peak_years_of_25": 25, "malaysia_top3_pct": 43},
     "unseen": {"clusters_unseen_pct": 86, "range_pct": [82, 88], "single_share_pct": 57, "single_unseen_pct": 95, "detections_in_seen_clusters_pct": 55, "same_sensor_50min_match_pct": [53, 70]},
-    "palm": {"loss_mha": 11.25, "palm_mha": 3.02, "sumatra": [25.6, 22.2], "kalimantan": [25.7, 34.9], "sulawesi_0711": 9.7, "papua_0711": 10.9},
 }
 
 def sha(p): return hashlib.sha256(p.read_bytes()).hexdigest()
@@ -66,11 +66,16 @@ def facts_data():
     assert (round(mean(EL_NINO)), round(mean(neutral)), round(mean(LA_NINA))) == (fb["el_nino"], fb["neutral"], fb["la_nina"]), (mean(EL_NINO), mean(neutral), mean(LA_NINA))
     assert round(mean(EL_NINO) / mean(neutral), 2) == fb["ratio_neutral"] and round(mean(EL_NINO) / (sum(mod[y] for y in yrs if y not in EL_NINO) / 18), 1) == fb["ratio_others"]
     assert mod[2015] == fb["y2015"] and len(EL_NINO) + len(LA_NINA) + len(neutral) == 25
+    man = json.loads(MAN.read_text()); fl = {l["id"]: l for l in man["fire_layers"]["layers"]}; hm = fl["harm"]["harm_meta"]
+    months = hm["months_by_region"]["indonesia"]; assert len(months) == 115 and months[0] == "2002-07" and months[-1] == "2012-01" and hm["n_points"] == 608298
+    harm = {"n_points": hm["n_points"], "months": len(months), "first": months[0], "last": months[-1], "modis": [fl["modis"]["min"], fl["modis"]["max"]], "viirs": [fl["viirs"]["min"], fl["viirs"]["max"]],
+            "note": "manifest.json fire_layers: harm_meta (n_points, months_by_region) and the min/max of the modis and viirs layers; the site data has no per-month point count, so the diagram shows the periods, not monthly counts"}
     return {
-        "inputs": {str(MON.relative_to(ROOT)): sha(MON), str(LINKS.relative_to(ROOT)): sha(LINKS)},
+        "inputs": {str(MON.relative_to(ROOT)): sha(MON), str(MAN.relative_to(ROOT)): sha(MAN), str(LINKS.relative_to(ROOT)): sha(LINKS)},
         "factbook": FACTBOOK,
         "f1": {"years": years, "glued": glued, "scaled": scaled, "jump_computed": round(jump, 3), "step_computed": round(step, 3), "note": "Indonesia series 'indonesia' of monthly.json, summed per year; glued = MODIS (modis_raw) to 2011 then VIIRS (viirs_raw); scaled = viirs_eq"},
         "f2": {"years": yrs, "modis": [mod[y] for y in yrs], "el_nino": EL_NINO, "la_nina": LA_NINA, "neutral": neutral, "means": {"el_nino": round(mean(EL_NINO)), "neutral": round(mean(neutral)), "la_nina": round(mean(LA_NINA))}},
+        "harm": harm,
         "f3": {"share_pct_by_month": {k: v[0] for k, v in prof.items()}, "years_used": {k: v[1] for k, v in prof.items()},
                "febapr_share_pct": {k: round(sum(v[0][1:4]), 1) for k, v in prof.items()}, "augoct_share_pct_indonesia": round(sum(prof["indonesia"][0][7:10]), 1),
                "note": "mean over years of each year's share of MODIS detections in each calendar month (2001-2025, every year equal weight); the fact book's 93 / 92 / 65 % are medians or country-averaged shares, so the card quotes the book, the diagram draws these profiles"},
@@ -152,33 +157,28 @@ def chart4():
     return svg("About 86 percent of VIIRS fire clusters have no MODIS detection within 2 km on the same day",
                "".join(o), "Three bars. All clusters: 86 percent not seen by MODIS, 14 percent seen. Single-detection clusters, which are 57 percent of all clusters: 95 percent not seen. VIIRS detections: 55 percent sit in clusters MODIS sees, 45 percent in clusters it does not.")
 
-def chart5():
-    p = FACTBOOK["palm"]
-    groups = [("Sumatra", p["sumatra"][0], p["sumatra"][1]), ("Kalimantan", p["kalimantan"][0], p["kalimantan"][1]), ("Sulawesi", None, p["sulawesi_0711"]), ("Papua", None, p["papua_0711"])]
-    L, R, T, B = 34, 8, 30, 40; top = 40
-    Y = lambda t: T + (H - T - B) * (1 - t / top)
-    gw = (W - L - R) / len(groups); o = []
-    for t in (0, 10, 20, 30, 40): o.append(f'<line class="gl" x1="{L}" x2="{W-R}" y1="{Y(t):.1f}" y2="{Y(t):.1f}"/>' + txt(L - 5, Y(t) + 4, f"{t}%", "ax", "end"))
-    o.append(f'<line class="brk" x1="{L}" x2="{W-R}" y1="{Y(25):.1f}" y2="{Y(25):.1f}"/>' + txt(W - R, Y(25) - 4, "about a quarter", "ax", "end"))
-    for i, (nm, a, b) in enumerate(groups):
-        x = L + i * gw + gw * .14; bw = gw * .34
-        if a is None:
-            o.append(txt(x + bw / 2, Y(0) - 4, "n/a", "ax", "middle"))
-        else:
-            o.append(f'<rect class="bar-mu" x="{x:.1f}" y="{Y(a):.1f}" width="{bw:.1f}" height="{Y(0)-Y(a):.1f}"/>' + txt(x + bw / 2, Y(a) - 4, f"{a:g}", "ax", "middle"))
-        o.append(f'<rect class="bar-ac" x="{x + bw + 2:.1f}" y="{Y(b):.1f}" width="{bw:.1f}" height="{Y(0)-Y(b):.1f}"/>' + txt(x + bw * 1.5 + 2, Y(b) - 4, f"{b:g}", "ax", "middle"))
-        o.append(txt(L + (i + .5) * gw, H - 24, nm, "ax", "middle"))
-    o.append(f'<rect class="bar-mu" x="{L}" y="5" width="10" height="10"/>' + txt(L + 15, 14, "loss 2002–06", "ax") + f'<rect class="bar-ac" x="{L+112}" y="5" width="10" height="10"/>' + txt(L + 127, 14, "loss 2007–11", "ax"))
-    o.append(txt(L, H - 6, "Share planted with oil palm within 5 years", "ax"))
-    return svg("Share of forest loss followed by oil palm within five years, by island and period",
-               "".join(o), "Sumatra 25.6 percent for loss in 2002 to 2006 and 22.2 percent for 2007 to 2011. Kalimantan 25.7 and 34.9 percent. Sulawesi 9.7 and Papua 10.9 percent for 2007 to 2011. A dashed line marks one quarter.")
+def chart5(d):
+    h = d; L, R = 8, 10; w = W - L - R
+    mi = lambda m: (int(m[:4]) - 2001) * 12 + int(m[5:]) - 1
+    X = lambda m, end=False: L + w * (mi(m) + (1 if end else 0)) / 300
+    rows = [("MODIS fire detections (real)", h["modis"], "bar-mu", None), ("VIIRS fire detections (real)", h["viirs"], "bar-mu", None), ("Harmonized VIIRS (experimental)", [h["first"], h["last"]], "bar-ac", f"{h['n_points']:,} points, {h['months']} months, night only")]
+    o = []
+    for y in (2001, 2005, 2010, 2015, 2020, 2025):
+        x = L + w * (y - 2001) / 25; o.append(f'<line class="gl" x1="{x:.1f}" x2="{x:.1f}" y1="26" y2="{H-30}"/>' + txt(x if y not in (2001, 2025) else (x if y == 2001 else x + 6), H - 12, y, "ax", "start" if y == 2001 else ("end" if y == 2025 else "middle")))
+    for i, (lab, (a, b), cls, extra) in enumerate(rows):
+        y = 34 + i * 62
+        o.append(txt(L, y - 6, lab, "ax") + f'<rect class="{cls}" x="{X(a):.1f}" y="{y}" width="{X(b, True) - X(a):.1f}" height="24"/>')
+        if extra: o.append(txt(L, y + 42, extra, "ax-fg"))
+    return svg("Periods of the real MODIS and VIIRS records and of the experimental Harmonized VIIRS layer, 2001 to 2025",
+               "".join(o), "Three bars on a 2001 to 2025 axis. MODIS: January 2001 to December 2025. VIIRS: January 2012 to December 2025. Harmonized VIIRS, the experimental model layer: July 2002 to January 2012, 115 months and 608,298 points, night passes only.")
 
 # ---------------------------------------------------------------- HTML
 def a(link, cls="pill"): return f'<a class="{cls}" href="app/{esc(link["hash"])}" data-fact-link="{esc(link["id"])}">{esc(link["label"])}</a>'
 
 def card(n, title, num, numcap, body, keep, source, fig, figcap, links):
-    primary, more = links[0], links[1:]
-    act = a(primary, "pill solid") + "".join(a(l) for l in more)
+    assert len(links) == 1, "one map link per fact"
+    link = links[0]
+    act = a(link, "pill solid")
     return f'''<article class="fact two" id="fact-{n}" aria-labelledby="fact-{n}-h">
 <div class="stack">
 <p class="eyebrow">Fact {n} of 5</p>
@@ -188,6 +188,7 @@ def card(n, title, num, numcap, body, keep, source, fig, figcap, links):
 <p class="body"><b>What to keep in mind.</b> {keep}</p>
 <p class="muted small fact-src">Source: {source}</p>
 <p class="ctas fact-act">{act}</p>
+<p class="muted small fact-hint">{link["hint"]}</p>
 </div>
 <figure class="fact-fig">{fig}<figcaption class="muted small">{figcap}</figcaption></figure>
 </article>'''
@@ -201,36 +202,36 @@ def build_html(d, L):
         "A small step after scaling is expected, because the ratio is fitted on VIIRS levels. Only the held-out years test it: the worst year is off by about 15%, and 2012 itself comes out about 11% too high.",
         "NASA FIRMS MODIS and VIIRS detections (CC0), Indonesia 2003–2025; scaling is our ratio baseline. Details on <a href=\"credits/\">Credits</a>.",
         chart1(d["f1"]), "Indonesia, detections per year. The line “joined as recorded” is MODIS to 2011 and VIIRS from 2012; after 2012 both lines are the same VIIRS counts.",
-        ls("f1a", "f1b")))
+        ls("f1")))
     c.append(card(2, "Indonesia burns more in El Niño years", "2.16×", "2.16 times",
         "MODIS detections per year in Indonesia, 2001–2025. The 7 El Niño years (Aug–Oct Pacific warmth index of 0.5 or more) average 95,205 detections; the 12 neutral years average 44,110. That is 2.16 times. Against all other years together, which include 6 La Niña years (24,278), it is 2.5 times.",
         "There are only 25 years, and 2015 alone has 149,770 detections; the rank correlation between the index and the yearly count is 0.73 (0.70 without 2015). This is an association, not proof of cause.",
         "NASA FIRMS MODIS detections (CC0); El Niño years from a Pacific warmth index (Aug–Oct, 0.5 or more). Details on <a href=\"credits/\">Credits</a>.",
         chart2(d["f2"]), "Indonesia, MODIS detections per year. Orange bars are the seven El Niño years.",
-        ls("f2a", "f2b")))
+        ls("f2")))
     c.append(card(3, "Two fire seasons, in opposite halves of the year", "5.9 months", "5.9 months apart",
         "MODIS 2001–2025, each year weighted equally. Myanmar, Laos and Vietnam have their peak month in February to April, in all 25 of 25 years. Indonesia peaks in August to October. On average 75% of the mainland's fire falls in Feb–Apr and 65% of Indonesia's in Aug–Oct. The two peaks are 5.9 months apart; 6 would be exactly opposite.",
         "Cambodia peaks in January–February, and Malaysia is flatter (43% of its fire in its three busiest months). Counts are detections, not burned area.",
         "NASA FIRMS MODIS detections (CC0), 10 countries. Details on <a href=\"credits/\">Credits</a>.",
         chart3(d["f3"]), "Share of a year's MODIS detections in each calendar month, mean over 25 years. Grey bands: Feb–Apr and Aug–Oct.",
-        ls("f3a", "f3b")))
+        ls("f3")))
     c.append(card(4, "VIIRS sees small fires that MODIS misses", "86%", "86 percent",
-        "of VIIRS fire clusters (2012–2025, 11 countries) have no MODIS detection within 2 km on the same day; the range is 82–88% depending on how clusters are drawn. 57% of clusters are a single detection, and 95% of those are not seen by MODIS. For the years before VIIRS, the map has an experimental model layer, <b>Harmonized VIIRS</b>: 608,298 points over 115 months from July 2002 to January 2012, night passes only.",
-        "“Not seen” mixes small fires, a different overpass time and swath coverage; the same VIIRS sensor 50 minutes later matches only 53–70% in Indonesia. Harmonized VIIRS is experimental model output, not VIIRS data. See the <a href=\"paper/technical-report.pdf\" target=\"_blank\" rel=\"noopener\">technical report</a>.",
+        "of VIIRS fire clusters (2012–2025, 11 countries) have no MODIS detection within 2 km on the same day; the range is 82–88% depending on how clusters are drawn. 57% of clusters are a single detection, and 95% of those are not seen by MODIS.",
+        "“Not seen” mixes small fires, a different overpass time and swath coverage; the same VIIRS sensor 50 minutes later matches only 53–70% in Indonesia.",
         "NASA FIRMS MODIS and VIIRS detections (CC0); Harmonized VIIRS is our own model output (CC BY 4.0). Details on <a href=\"credits/\">Credits</a>.",
         chart4(), "VIIRS fire clusters 2012–2025: share with and without a MODIS detection within 2 km on the same day.",
-        ls("f4a", "f4b")))
-    c.append(card(5, "Oil palm followed about a quarter of forest loss in Sumatra and Kalimantan", "about a quarter", "about a quarter",
-        "Of the forest lost in Sumatra and Kalimantan in 2002–2011 (11.25 million hectares), about 3.02 million hectares were planted with oil palm within five years of the loss. In Sulawesi and Papua the share for 2007\u20132011 is about one tenth (9.7% and 10.9%).",
-        "This shows timing, not that the forest was cleared for oil palm. The oil-palm map ends in 2021, and palm planted before the loss is not counted.",
-        "Forest loss: Hansen et al. 2013 (CC BY 4.0); oil palm planting year: Descals et al. 2024 (CC BY 4.0). Details on <a href=\"credits/\">Credits</a>.",
-        chart5(), "Share of forest loss followed by oil palm within five years. Grey: loss in 2002\u201306; orange: loss in 2007\u201311. n/a: no 2002\u201306 value for Sulawesi and Papua. The dashed line marks one quarter.",
+        ls("f4")))
+    c.append(card(5, "Our experimental model draws the fires of 2002\u20132011 as VIIRS-style points", "608,298 points", "608,298 points",
+        "<b>Harmonized VIIRS</b> is an experimental layer: our own model reads MODIS Aqua night scenes (46,125 of them, July 2002 to January 2012) and draws where a VIIRS-style sensor would have seen heat. The layer holds 608,298 points over 115 months, from July 2002 to January 2012, night passes only. It is experimental model output, not VIIRS data.",
+        "It exists for night passes only, and it was computed for two boxes (an Indonesia box and a northern box). Read the <a href=\"paper/technical-report.pdf\" target=\"_blank\" rel=\"noopener\">technical report</a> for how it was made and what we tested.",
+        "NASA MODIS Aqua night scenes (LAADS DAAC, NASA open data) and NASA FIRMS MODIS (CC0); the points are our own model output (CC BY 4.0). Details on <a href=\"credits/\">Credits</a>.",
+        chart5(d["harm"]), "Periods covered by the real MODIS and VIIRS records and by the experimental Harmonized VIIRS layer. The site data has no point count per month, so the diagram shows periods, not monthly counts.",
         ls("f5")))
     head = '''<section class="band" id="facts" aria-labelledby="facts-h">
 <div class="stack">
 <p class="eyebrow">Facts we tested</p>
 <h2 class="disp" id="facts-h">Five facts about fire in Southeast Asia.</h2>
-<p class="body">Each fact was recomputed a second time. Each button opens the map at the place, month and layers that show it. A detection is one hot pixel reported by a satellite; every count here is a count of detections, not of fires.</p>
+<p class="body">Each button opens the map at the place, month and layers that show the fact; press Play there to watch it happen. A detection is one hot pixel reported by a satellite; every count here is a count of detections, not of fires.</p>
 </div>
 '''
     return head + "\n".join(c) + "\n</section>"

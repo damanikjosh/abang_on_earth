@@ -1,50 +1,50 @@
 {
- "note": "Hashes were written by the app's own link writer (open the app with the seed state, read location.hash) and each is loaded in a browser by scripts/check_facts91.py. Every one carries s= explicitly.",
+ "note": "One link per fact. Hashes were written by the app's own link writer (open the app with the seed state, read location.hash); s= is explicit in every one; cal= and pn= (and t=) are the app's view keys for the calendar and the side cards; a build without them ignores them. Every link selects a region (r, c). 'action' = the month scripts/check_facts91.py waits for after pressing Play.",
  "links": [
   {
-   "id": "f1a",
-   "label": "Open on the map: Sep 2011",
-   "hash": "#m=2011-09&r=all&c=all&k=viirs_eq&v=113.004,-1.500,4.19&s=fire-modis"
+   "id": "f1",
+   "label": "Open on the map and press Play",
+   "hash": "#m=2011-08&r=indonesia&c=IDN&k=viirs_eq&v=110.004,-1.500,4.19&s=fire-modis,fire-viirs&t=timeline&pn=d&cal=1",
+   "hint": "Press Play: until December 2011 only MODIS points are drawn; from January 2012 VIIRS points appear and the map fills up.",
+   "start": "2011-08",
+   "action": "2012-09",
+   "panels": "wide: Details (MODIS / VIIRS observed counts change at 2012) + calendar (dark cells start in 2012), layer card hidden; phone/tablet: Timeline tab (calendar)"
   },
   {
-   "id": "f1b",
-   "label": "Sep 2012",
-   "hash": "#m=2012-09&r=all&c=all&k=viirs_eq&v=113.004,-1.500,4.19&s=fire-modis,fire-viirs"
+   "id": "f2",
+   "label": "Open on the map and press Play",
+   "hash": "#m=2015-06&r=indonesia&c=IDN&k=viirs_eq&v=110.003,-1.000,4.59&s=fire-modis&t=timeline&pn=d&cal=1",
+   "hint": "Press Play: the calendar shows the dark El Niño years for Indonesia; the map fills with fires from August to October 2015 and is quiet in 2016.",
+   "start": "2015-06",
+   "action": "2015-09",
+   "panels": "wide: Details of Indonesia + calendar (dark El Nino years), layer card hidden; phone/tablet: Timeline tab (calendar)"
   },
   {
-   "id": "f2a",
-   "label": "Open on the map: Sep 2015",
-   "hash": "#m=2015-09&r=all&c=all&k=viirs_eq&v=111.003,-1.000,4.59&s=fire-modis,fire-viirs"
+   "id": "f3",
+   "label": "Open on the map and press Play",
+   "hash": "#m=2019-01&r=all&c=all&k=viirs_eq&v=106.000,3.500,3.40&s=fire-modis&t=timeline&pn=&cal=1",
+   "hint": "Press Play: fires appear on the mainland in February to April, then in Indonesia from August.",
+   "start": "2019-01",
+   "action": "2019-09",
+   "panels": "wide and phone: both side cards hidden so the wide view is not covered, calendar open (the seasonal stripes)"
   },
   {
-   "id": "f2b",
-   "label": "Sep 2016 for comparison",
-   "hash": "#m=2016-09&r=all&c=all&k=viirs_eq&v=111.003,-1.000,4.59&s=fire-modis,fire-viirs"
-  },
-  {
-   "id": "f3a",
-   "label": "Open on the map: Mar 2019, mainland",
-   "hash": "#m=2019-03&r=all&c=all&k=viirs_eq&v=102.003,18.000,4.39&s=fire-modis"
-  },
-  {
-   "id": "f3b",
-   "label": "Sep 2019, Borneo",
-   "hash": "#m=2019-09&r=all&c=all&k=viirs_eq&v=113.004,-1.500,4.19&s=fire-modis"
-  },
-  {
-   "id": "f4a",
-   "label": "Open on the map: Sep 2019, MODIS and VIIRS at night",
-   "hash": "#m=2019-09&r=all&c=all&k=viirs_eq&v=113.500,-1.800,9.49&s=fire-modis,fire-viirs&x=fire-modis:1~fire-viirs:1"
-  },
-  {
-   "id": "f4b",
-   "label": "Sep 2006, Harmonized VIIRS (experimental)",
-   "hash": "#m=2006-09&r=all&c=all&k=viirs_eq&v=113.500,-1.800,9.49&s=fire-modis,fire-harm&x=fire-modis:1"
+   "id": "f4",
+   "label": "Open on the map and press Play",
+   "hash": "#m=2019-07&r=central-kalimantan&c=IDN&k=viirs_eq&v=113.750,-2.150,10.50&s=fire-modis,fire-viirs&x=fire-modis:1~fire-viirs:1&t=timeline&pn=l&cal=0",
+   "hint": "Press Play: night-time MODIS (orange) and VIIRS (red) points in Central Kalimantan build up to the September peak; VIIRS adds many small points.",
+   "start": "2019-07",
+   "action": "2019-09",
+   "panels": "wide: Layers card (MODIS vs VIIRS rows, Night boxes), Details and calendar hidden; phone/tablet: Timeline tab (Play lives only in that tab; with the Layers tab open Play is not on screen, so t=timeline is set and the visitor taps the Layers tab to see the rows)"
   },
   {
    "id": "f5",
-   "label": "Open on the map",
-   "hash": "#m=2016-12&r=all&c=all&k=viirs_eq&v=101.800,0.600,7.19&s=loss,palm"
+   "label": "Open on the map and press Play",
+   "hash": "#m=2004-10&r=central-kalimantan&c=IDN&k=viirs_eq&v=113.895,-3.197,9.29&s=fire-harm,fire-modis&o=fire-harm,fire-viirs,fire-modis,regions,countries,burned,drivers,loss,tmfdef,tmfdeg,mb_mine,mb_pulp,mb_palm,palm,plantation,peat&x=fire-modis:1&cal=0&pn=l&t=timeline",
+   "hint": "Press Play: MODIS night points (orange) and the model's VIIRS-style points (purple) in Central Kalimantan, from the October 2004 fire season onward.",
+   "start": "2004-10",
+   "action": "2004-11",
+   "panels": "wide: Layers card (Harmonized VIIRS row and its badge), Details and calendar hidden; phone/tablet: Timeline tab (Play lives only in that tab; with the Layers tab open Play is not on screen, so t=timeline is set and the visitor taps the Layers tab to see the rows)"
   }
  ]
 }

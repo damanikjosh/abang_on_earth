@@ -1,7 +1,8 @@
 {
  "inputs": {
   "public/data-v4/monthly.json": "8946eacd8f1773d0339070267fc5be9a99c188c1302fa24d6013b954dcc85879",
-  "scripts/facts_links.json": "895e82b9158845c3ecb078f225f65246603e83f694eccbf71e8c5b7c45f66b64"
+  "public/data-v4/manifest.json": "e884083a0cda41dc568986d744fb8659696707eadcb191ef5f1def9f97a69e75",
+  "scripts/facts_links.json": "aeeb8b3e5e6f663d106587e48d729945832381589b48d0ce8dba7f9ed2081e54"
  },
  "factbook": {
   "elnino_means": {
@@ -41,20 +42,6 @@
     53,
     70
    ]
-  },
-  "palm": {
-   "loss_mha": 11.25,
-   "palm_mha": 3.02,
-   "sumatra": [
-    25.6,
-    22.2
-   ],
-   "kalimantan": [
-    25.7,
-    34.9
-   ],
-   "sulawesi_0711": 9.7,
-   "papua_0711": 10.9
   }
  },
  "f1": {
@@ -228,6 +215,21 @@
    "neutral": 44110,
    "la_nina": 24278
   }
+ },
+ "harm": {
+  "n_points": 608298,
+  "months": 115,
+  "first": "2002-07",
+  "last": "2012-01",
+  "modis": [
+   "2001-01",
+   "2025-12"
+  ],
+  "viirs": [
+   "2012-01",
+   "2025-12"
+  ],
+  "note": "manifest.json fire_layers: harm_meta (n_points, months_by_region) and the min/max of the modis and viirs layers; the site data has no per-month point count, so the diagram shows the periods, not monthly counts"
  },
  "f3": {
   "share_pct_by_month": {
