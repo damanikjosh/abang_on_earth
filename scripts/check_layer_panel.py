@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """layer panel = "On the map" list (only what is on, drag to reorder, no up/down buttons) + grouped searchable catalogue; opacity lives in the (i) panel. BUILT app or live site.
-  uv run --with playwright python scripts/check_part2_75.py [base_url] [shot_dir]      default http://127.0.0.1:4173/
+  uv run --with playwright python scripts/check_layer_panel.py [base_url] [shot_dir]      default http://127.0.0.1:4173/
 At 390x844 and 1440x900, light and dark: 19 layer rows in the catalogue (the two placeholder rows are not listed; 3 of them are the MapBiomas rows), On the map shows exactly the active set; ticking a layer adds it on top (and draws on top), the off button removes it;
 the colour overlay is one of the rows (picker inside, off button, ticking it in the catalogue brings it back); real mouse drag and CDP touch drag change the map draw order and the link and survive a reload;
 keyboard reorder (focus the handle, Space, Up/Down, Space) works and is announced; no up/down buttons exist; opacity slider inside (i) changes the layer opacity, 0 works, persists in the link and in the slider after reload;

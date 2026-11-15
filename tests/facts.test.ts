@@ -13,7 +13,8 @@ test("the Facts row exists once, sits before the technical report row, has an an
   assert.equal((html.match(/id="facts"/g) ?? []).length, 1);
   assert.ok(html.indexOf('id="facts"') < html.indexOf('id="paper"') && html.indexOf('id="research"') < html.indexOf('id="facts"'));
   assert.equal((row.match(/<article class="fact two"/g) ?? []).length, 5);
-  assert.equal((row.match(/Open on the map and press Play/g) ?? []).length, 5);
+  assert.equal((row.match(/Open on the map and press Play/g) ?? []).length, 4); // the fifth fact's button is "Open on the map" only (owner's wording)
+  assert.equal((row.match(/data-fact-link="f5">Open on the map</g) ?? []).length, 1);
 });
 test("every card has a diagram with drawn marks, a caveat line and a source line", () => {
   const cards = row.split("<article").slice(1);
@@ -27,7 +28,8 @@ test("every map link carries s=, a month, a view, and names only real layers, fi
   const links = [...row.matchAll(/href="app\/#([^"]+)"/g)].map((m) => new URLSearchParams(m[1].replaceAll("&amp;", "&")));
   assert.equal(links.length, 5);
   for (const c of row.split("<article").slice(1)) assert.equal((c.match(/data-fact-link/g) ?? []).length, 1, "exactly one map link per fact");
-  for (const c of row.split("<article").slice(1)) assert.match(c, /fact-hint">Press Play: /);
+  for (const c of row.split("<article").slice(1, 5)) assert.match(c, /fact-hint">Press Play: /);
+  assert.doesNotMatch(row.split("<article")[5], /fact-hint|Press Play/); // the fifth fact has no Play hint
   const ids = new Set([...layers.map((l) => l.id), ...fire.map((f) => "fire-" + f.id)]);
   for (const q of links) {
     assert.ok(q.has("s") && q.get("s") !== "", "s= present"); assert.ok(q.get("s")!.split(",").every((i) => ids.has(i)), q.get("s")!);

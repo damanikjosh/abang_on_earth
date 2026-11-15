@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Day / Night boxes inside the MODIS fires row. Needs a build whose manifest gives the modis layer `classes` (Day id 1, Night id 2, tiles for 2002-09 only);
 the preview on http://127.0.0.1:4186/ has them (test tiles overlaid on dist/, not in git).
-  uv run --with playwright --with pillow --with numpy python scripts/check_daynight86.py [base_url] [shot_dir]
+  uv run --with playwright --with pillow --with numpy python scripts/check_daynight.py [base_url] [shot_dir]
 At 390x844 and 1440x900, light and dark: both boxes present and ticked; unticking Night hides the night points (z9.5) and the night density cells (z7) and changes the pixels, Day stays;
 unticking Day does the converse; both off draws nothing and says so; x=fire-modis:2 in the link, restored on reload, bad class numbers ignored, old links unchanged; a month without split tiles
 (2002-10, 2019-09) is drawn from the layer's own file exactly as before and says where day and night can be told apart; opacity from the (i) panel reaches the class layers; moving the row moves its class layers; keyboard; no console errors."""

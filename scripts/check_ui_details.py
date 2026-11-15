@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """ credits button icon drawn once;  home button in the 360x640 fold;  stalled requests end in the error state;  touch devices >= 1200 px get the dock.
-  uv run --with playwright python scripts/check_r3.py [base_url]      default http://127.0.0.1:4837/   (needs pillow: uv run --with playwright --with pillow ...)"""
+  uv run --with playwright python scripts/check_ui_details.py [base_url]      default http://127.0.0.1:4837/   (needs pillow: uv run --with playwright --with pillow ...)"""
 import sys, re, io
 from playwright.sync_api import sync_playwright
 from PIL import Image, ImageStat

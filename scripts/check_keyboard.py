@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """keyboard path. BUILT app or live site.
-  uv run --with playwright python scripts/check_a11y39.py [base_url]      default http://127.0.0.1:4829/
+  uv run --with playwright python scripts/check_keyboard.py [base_url]      default http://127.0.0.1:4829/
 First Tab = 'Skip to the map controls', visible; Enter moves focus into the dock; the month slider announces 'May 2023'-style text (aria-valuetext) and follows the arrow keys;
 the calendar is one image with a label (not a fake grid); every button/select in the dock has an accessible name."""
 import sys

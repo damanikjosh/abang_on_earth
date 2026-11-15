@@ -4,7 +4,7 @@
   python3 scripts/build_facts_data.py --check    # recompute and fail if index.html or facts_data.json differ (used by tests/facts.test.ts)
 Inputs (all in the repo; the file hashes are recorded in facts_data.json):
   public/data-v4/monthly.json     yearly Indonesia counts (MODIS raw, VIIRS raw, VIIRS-equivalent) and the monthly profiles of Myanmar, Laos, Vietnam, Indonesia
-  scripts/facts_links.json        the "Open on the map" hashes (each one read back from the app's own link writer and loaded in a browser by scripts/check_facts91.py)
+  scripts/facts_links.json        the "Open on the map" hashes (each one read back from the app's own link writer and loaded in a browser by scripts/check_facts.py)
 Numbers that are not in the data files above come from the project's fact book and are in FACTBOOK below, each with its source.
 The El Nino year list is not in any data file; it was recovered from the fact book's three group means (the script asserts that it reproduces 95,205 / 44,110 / 24,278 exactly).
 Standard library only."""
@@ -173,6 +173,7 @@ def chart5(d):
                "".join(o), "Three bars on a 2001 to 2025 axis. MODIS: January 2001 to December 2025. VIIRS: January 2012 to December 2025. Harmonized VIIRS, the experimental model layer: July 2002 to January 2012, 115 months and 608,298 points, night passes only.")
 
 # ---------------------------------------------------------------- HTML
+def hint_html(link): return f'<p class="muted small fact-hint">{link["hint"]}</p>' if link.get("hint") else ""
 def a(link, cls="pill"): return f'<a class="{cls}" href="app/{esc(link["hash"])}" data-fact-link="{esc(link["id"])}">{esc(link["label"])}</a>'
 
 def card(n, title, num, numcap, body, keep, source, fig, figcap, links):
@@ -188,7 +189,7 @@ def card(n, title, num, numcap, body, keep, source, fig, figcap, links):
 <p class="body"><b>What to keep in mind.</b> {keep}</p>
 <p class="muted small fact-src">Source: {source}</p>
 <p class="ctas fact-act">{act}</p>
-<p class="muted small fact-hint">{link["hint"]}</p>
+{hint_html(link)}
 </div>
 <figure class="fact-fig">{fig}<figcaption class="muted small">{figcap}</figcaption></figure>
 </article>'''

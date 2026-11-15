@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """map type dropdown (Plain map / Satellite) + Peatland label. BUILT app or live site.
-  uv run --with playwright --with pillow --with numpy python scripts/check_basemap73.py [base_url] [shot_dir]      default http://127.0.0.1:4173/
+  uv run --with playwright --with pillow --with numpy python scripts/check_basemap.py [base_url] [shot_dir]      default http://127.0.0.1:4173/
 At 390x844 and 1440x900, light and dark: the select is labelled and defaults to Plain map; satellite requests the imagery host (none before) and changes the pixels;
 the choice is in the link (b=sat), restored on reload, survives a layer toggle, switching back removes it; no console errors; blocked imagery falls back to the plain map with a notice;
 the peat row says Peatland, has the hint, and does not wrap badly."""

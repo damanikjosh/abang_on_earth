@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """dragging a row of "On the map" near the top or bottom edge of the panel scrolls the panel (a list longer than the panel used to end at the screen edge: on a phone the row could not be dropped further down). BUILT app or live site.
-  uv run --with playwright python scripts/check_autoscroll86.py [base_url]      default http://127.0.0.1:4173/
+  uv run --with playwright python scripts/check_autoscroll.py [base_url]      default http://127.0.0.1:4173/
 390x844 (mouse and CDP touch) and 1440x900 (mouse), light and dark: with every layer on, drag the first row to the bottom edge and hold: the panel scrolls, the row moves down the list, the draw order and the link follow; dragging inside the panel
 does not scroll it; dragging a lower row to the top edge scrolls back up."""
 import sys

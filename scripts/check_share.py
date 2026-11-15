@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """a share link keeps the class switches of the drivers layer (x=), the layer opacity (p=) and the open tab (t=); older links (without them) open with the defaults. BUILT app or live site.
-  uv run --with playwright python scripts/check_share39.py [base_url]      default http://127.0.0.1:4811/"""
+  uv run --with playwright python scripts/check_share.py [base_url]      default http://127.0.0.1:4811/"""
 import sys
 from playwright.sync_api import sync_playwright
 BASE = (sys.argv[1] if len(sys.argv) > 1 else "http://127.0.0.1:4811/").rstrip("/") + "/"

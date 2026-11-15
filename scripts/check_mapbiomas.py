@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """MapBiomas rows mb_palm, mb_pulp, mb_mine, mode cumfile like "Oil palm". BUILT app or live site.
-  uv run --with playwright --with pillow python scripts/check_mapbiomas80.py [base_url] [shot_dir] [--only phone-light|phone-dark|desk-light|desk-dark]      default http://127.0.0.1:4173/
+  uv run --with playwright --with pillow python scripts/check_mapbiomas.py [base_url] [shot_dir] [--only phone-light|phone-dark|desk-light|desk-dark]      default http://127.0.0.1:4173/
 At 390x844 and 1440x900, light and dark: the three rows (Oil palm / Pulpwood plantation / Mining, each "(MapBiomas)") are in the group "Plantations and mines", off by default, with no variant picker;
 ticking one adds it on top of On the map and to the link; the slider year picks the file (source ctx-<row>-<year>, 2023 for later years) and moving it swaps the file; opacity in the (i) works; drag reorder works;
 the (i) panel shows source, licence, legend and the caveats; for each of the ten known sites of  the 7 x 7 pixels at the site are the basemap before the site's first year

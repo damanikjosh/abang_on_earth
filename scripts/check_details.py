@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Details card fixes. BUILT app or live site.
-  uv run --with playwright python scripts/check_details39.py [base_url]      default http://127.0.0.1:4823/
+  uv run --with playwright python scripts/check_details.py [base_url]      default http://127.0.0.1:4823/
  Brunei Jan 2008 (VIIRS-equivalent hidden): no 'estimated' flag next to 'not shown'.  all-countries oil palm shows a sum and names the countries without a map;
 no percentage from < 20 detections (Jan 2001).  '2025: same-year loss only' is a note under the number, not in the value.  region names tidy (no 'Province', no ALL-CAPS, Sagaing)."""
 import sys

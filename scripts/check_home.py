@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """head tags and first screen. BUILT app or live site.
-  uv run --with playwright python scripts/check_home39.py [base_url]      default http://127.0.0.1:4826/
+  uv run --with playwright python scripts/check_home.py [base_url]      default http://127.0.0.1:4826/
 Home: title and description say Southeast Asia (not Indonesia), og:description + twitter:card + favicon link present, favicon file answers, 'Open the map' fully inside the 390x844 fold,
 no horizontal scroll. App: description + favicon; the loading state exists in the HTML before the app starts and is gone when it is ready. Credits: description + favicon."""
 import sys, re, urllib.request

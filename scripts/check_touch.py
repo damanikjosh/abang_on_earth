@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """touch targets and the 404 page. BUILT app or live site.
-  uv run --with playwright python scripts/check_touch39.py [base_url]      default http://127.0.0.1:4835/
+  uv run --with playwright python scripts/check_touch.py [base_url]      default http://127.0.0.1:4835/
 On a phone (390x844) with the Layers tab open and the drivers layer on: every visible interactive element in the dock and the map buttons is >= 44 px high and wide (inline links excluded);
 credits 'i' >= 44. 404: /404.html exists with links to the map, home and credits; a missing URL answers 404 (live site: with that page)."""
 import sys, urllib.request, urllib.error
@@ -17,7 +17,7 @@ with sync_playwright() as p:
     pg.click("#dock [role=tab][data-tab=layers]"); pg.wait_for_timeout(400); pg.evaluate("document.getElementById('sel').open=true"); pg.wait_for_timeout(200)
     small = pg.evaluate("""[...document.querySelectorAll('#dock button, #dock select, #dock input[type=checkbox], #dock .cls, .maplibregl-ctrl button, .maplibregl-ctrl-attrib-button, .tabs button')]
       .filter(e=>e.offsetParent!==null||getComputedStyle(e).position==='fixed').map(e=>{const r=e.getBoundingClientRect();const lab=e.closest('label');const q=lab?lab.getBoundingClientRect():r;return [e.className||e.tagName, Math.round(Math.max(r.height,q.height)), Math.round(Math.max(r.width,q.width))]})
-      .filter(x=>x[1]>0&&(x[1]<44||x[2]<44)&&!/grip|grab/.test(x[0]))   // grip and grab: the 44 px hit area is a ::after pseudo-element (measured in check_misc39 for the grip)""")
+      .filter(x=>x[1]>0&&(x[1]<44||x[2]<44)&&!/grip|grab/.test(x[0]))   // grip and grab: the 44 px hit area is a ::after pseudo-element (measured in check_misc for the grip)""")
     need(not small, f"every button/select/checkbox label in the dock and every map button is >= 44 px (too small: {small[:4]})")
     b.close()
 for path, want in (("404.html", 200),):

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """what a click on an area selects. Countries row on = country; Provinces row on = province; both off = by zoom (country on a wide view, province from zoom 5, hysteresis 0.3). BUILT app or live site.
-  uv run --with playwright python scripts/check_clickrule86.py [base_url]      default http://127.0.0.1:4173/
+  uv run --with playwright python scripts/check_clickrule.py [base_url]      default http://127.0.0.1:4173/
 At 390x844 and 1440x900, light and dark: the click target and the hover outline follow the rule at a wide and a close zoom with both rows off and with each row on; the level does not flip while zooming across the boundary;
 the link (r=, c=) and the pickers match the selection; a click on the sea changes nothing; no console errors."""
 import sys

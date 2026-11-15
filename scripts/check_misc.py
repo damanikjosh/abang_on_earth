@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """small behaviours that had no check. BUILT app or live site.
-  uv run --with playwright python scripts/check_misc39.py [base_url]      default http://127.0.0.1:4829/
+  uv run --with playwright python scripts/check_misc.py [base_url]      default http://127.0.0.1:4829/
 no 'o=' in the link until the user moves a layer row; moving one (keyboard: Down on its handle) adds it. dark theme logs no 'could not be loaded' image warning.
 a panel body that scrolls is marked data-more (fade) and the mark goes when scrolled to the end. layer handle and info button hit areas >= 44 px."""
 import sys

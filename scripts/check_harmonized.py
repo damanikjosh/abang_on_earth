@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """the real Harmonized VIIRS layer in the app (all 115 months, Indonesia box + northern box). BUILT app or live site.
-  uv run --with playwright python scripts/check_harm86.py [base_url]
+  uv run --with playwright python scripts/check_harmonized.py [base_url]
 Row name and badge, the (i) panel (important block first, coverage names the countries, not 'Indonesia only'), Night box hides the layer, Day box disabled, draws in 2002-09 over Kalimantan and in 2004-03 over Thailand/Myanmar (northern box),
 months outside 2002-07..2012-01 say so in the panel, no console errors, 390 and 1440 px, light and dark."""
 import sys

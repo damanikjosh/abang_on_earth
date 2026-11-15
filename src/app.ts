@@ -432,7 +432,7 @@ async function main() {
     layers.onChange = () => paintMap();
     regionsOn = st.active.has("regions"); regionsOp = opacityOf(st, "regions"); countryOn = st.active.has("countries"); countryOp = opacityOf(st, "countries");
     renderOn(); apply();
-    Object.assign(window, { __panel: () => panelSt }); // read by scripts/check_share39.py (like __map)
+    Object.assign(window, { __panel: () => panelSt }); // read by scripts/check_share.py (like __map)
   }
   // "no data for this layer in <country>": only layers whose def lists `coverage` can show it (none do while the data is Indonesia-only)
   const gapDefs: [string, { coverage?: string[]; gap_note?: string; region_gaps?: Record<string, string> }][] = [...(lf?.layers ?? []).map((d) => [d.id, d] as [string, typeof d]), ...(ff?.layers ?? []).map((d) => ["fire-" + d.id, d] as [string, typeof d])];

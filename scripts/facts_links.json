@@ -1,5 +1,5 @@
 {
- "note": "One link per fact. Hashes were written by the app's own link writer (open the app with the seed state, read location.hash); s= is explicit in every one; cal= and pn= (and t=) are the app's view keys for the calendar and the side cards; a build without them ignores them. Every link selects a region (r, c). 'action' = the month scripts/check_facts91.py waits for after pressing Play.",
+ "note": "One link per fact. Hashes were written by the app's own link writer (open the app with the seed state, read location.hash); s= is explicit in every one; cal= and pn= (and t=) are the app's view keys for the calendar and the side cards; a build without them ignores them. Every link selects a region (r, c). 'action' = the month scripts/check_facts.py waits for after pressing Play.",
  "links": [
   {
    "id": "f1",
@@ -39,9 +39,9 @@
   },
   {
    "id": "f5",
-   "label": "Open on the map and press Play",
+   "label": "Open on the map",
    "hash": "#m=2004-10&r=central-kalimantan&c=IDN&k=viirs_eq&v=113.895,-3.197,9.29&s=fire-harm,fire-modis&o=fire-harm,fire-viirs,fire-modis,regions,countries,burned,drivers,loss,tmfdef,tmfdeg,mb_mine,mb_pulp,mb_palm,palm,plantation,peat&x=fire-modis:1&cal=0&pn=l&t=timeline",
-   "hint": "Press Play: MODIS night points (orange) and the model's VIIRS-style points (purple) in Central Kalimantan, from the October 2004 fire season onward.",
+   "hint": "",
    "start": "2004-10",
    "action": "2004-11",
    "panels": "wide: Layers card (Harmonized VIIRS row and its badge), Details and calendar hidden; phone/tablet: Timeline tab (Play lives only in that tab; with the Layers tab open Play is not on screen, so t=timeline is set and the visitor taps the Layers tab to see the rows)"

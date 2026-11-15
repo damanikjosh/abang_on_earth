@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Countries is the default region level on a fresh start. BUILT app or live site.
-  uv run --with playwright python scripts/check_default90.py [base_url]      default http://127.0.0.1:4173/
+  uv run --with playwright python scripts/check_default_rows.py [base_url]      default http://127.0.0.1:4173/
 390x844 and 1440x900, light and dark: a bare /app/ opens with Countries on and Provinces off (rows, map opacities, Details chip 'by country', click level 'country', a click on Kalimantan selects Indonesia);
 the link the app writes always carries s=; a link copied after switching to Provinces reopens with Provinces; a state link WITHOUT s (written by an older version) keeps Provinces; rg=0 without s = no colouring at all; an explicit s= is obeyed;
 an old format l/f link keeps Provinces; one level at a time still holds; no console errors."""

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """group "Fire counts by region" with the rows Provinces and Countries. BUILT app or live site.
-  uv run --with playwright python scripts/check_countries86.py [base_url] [shot_dir]      default http://127.0.0.1:4173/
+  uv run --with playwright python scripts/check_countries.py [base_url] [shot_dir]      default http://127.0.0.1:4173/
 At 390x844 and 1440x900, light and dark: labels; ticking Countries fills each country with the colour of its OWN national series (checked against monthly.json: darker = more), Provinces goes off (one level at a time),
 the row has its own metric picker (kc= in the link), opacity from the (i) panel, a click on a country selects it like the Country picker, the row holds no free text, links round-trip, old links unchanged, no console errors."""
 import sys, json, urllib.request

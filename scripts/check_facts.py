@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """ live check of the homepage Facts row. BUILT site (npm run build; serve dist on 4191 or 4193) or the live site.
-  uv run --with playwright python scripts/check_facts91.py http://127.0.0.1:4191/ [--shots DIR]
+  uv run --with playwright python scripts/check_facts.py http://127.0.0.1:4191/ [--shots DIR]
 Checks: the row (id=facts) exists once and has 5 cards; every card has a diagram whose drawn marks are non-empty and whose text is at least 12 px at the card size; the row is placed before the technical report row;
 at 390 and 1440 px, light and dark: no horizontal scroll, no console error; the homepage nav is unchanged (Home, App, Credits; no new page); every "Open on the map" link is loaded in the app, one at a time:
 the layers named by s= are exactly the rows on the map, the month shown is the month in the link, the map centre and zoom match v=, class boxes in x= are unticked, tiles are loaded with no HTTP error and no console error.
