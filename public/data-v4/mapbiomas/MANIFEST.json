@@ -1,0 +1,11 @@
+{
+ "product": "MapBiomas Indonesia Collection 4 v2: land that became oil palm, pulpwood or mining, additive by year, tiles for the Abang on Earth map",
+ "licence": "CC-BY-SA",
+ "licence_url": "https://landy.mapbiomas.id/en/termsofuse",
+ "citation": "MapBiomas Indonesia - Collection 4 time-series maps of land-use and land-cover, accessed on 15/11/2026 via: https://landy.mapbiomas.id/en/gee",
+ "rule": "first year Y in 2001-2024 with class==target in Y and Y+1 (persistence 2 years) and class!=target in 2000; per 0.001 deg cell the median/mean over the 30 m pixels, weighted by overlap area",
+ "source": "MapBiomas Indonesia Collection 4 v2 (projects/mapbiomas-public/assets/indonesia/lulc/collection4/mapbiomas_indonesia_collection4_coverage_v2), derived",
+ "derived": "PMTiles (paletted PNG) z0-10, one cumulative file per class and year 2001-2023 (cells whose first year is <= the year; alpha = converted share), built by tools/layers/tiler_mapbiomas_years.py from 0.001 degree conversion-year rasters",
+ "share_alike": "These tiles are a derivative of MapBiomas data and are offered under CC-BY-SA; keep the attribution when you reuse them.",
+ "caveats": "Years are good to about plus or minus 2 years: each map cell (about 110 m) takes the median year of its changed 30 m pixels. A change counts only when the class holds for two years in a row, so the data stops at 2023 (later years show 2023) and the newest conversions are missing. Colour strength is the share of the cell that is the class at the end of 2023, shown from the cell's first year on. Land that was already the class in 2000 is not shown. Indonesia only."
+}
