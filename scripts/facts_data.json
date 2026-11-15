@@ -2,7 +2,7 @@
  "inputs": {
   "public/data-v4/monthly.json": "8946eacd8f1773d0339070267fc5be9a99c188c1302fa24d6013b954dcc85879",
   "public/data-v4/manifest.json": "e884083a0cda41dc568986d744fb8659696707eadcb191ef5f1def9f97a69e75",
-  "scripts/facts_links.json": "4ddae877b63d64710f45d05736858eaacaa1733f22c66d687bbcad005199fc4b"
+  "scripts/facts_links.json": "010c0597fbd657529af08568f4d46073d939bafe3681848a890e4905c0069568"
  },
  "factbook": {
   "elnino_means": {
@@ -28,6 +28,43 @@
    "indonesia_augoct_pct": 65,
    "peak_years_of_25": 25,
    "malaysia_top3_pct": 43
+  },
+  "palm_fire": {
+   "palm_burned_pct": 36.1,
+   "palm_unburned_pct": 28.1,
+   "ratios": [
+    [
+     "Oil palm",
+     1.28,
+     1.19,
+     1.38
+    ],
+    [
+     "Other farming",
+     0.95,
+     0.91,
+     1.0
+    ],
+    [
+     "Shifting cultivation",
+     0.66,
+     0.57,
+     0.75
+    ],
+    [
+     "Mines and energy",
+     0.54,
+     0.44,
+     0.64
+    ],
+    [
+     "Logging",
+     0.52,
+     0.44,
+     0.63
+    ]
+   ],
+   "ratio_palm_wo_wildfire_class": 1.35
   },
   "unseen": {
    "clusters_unseen_pct": 86,

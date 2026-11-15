@@ -11,6 +11,15 @@
    "panels": "wide: Details (MODIS / VIIRS observed counts change at 2012) + calendar (dark cells start in 2012), layer card hidden; phone/tablet: Timeline tab (calendar)"
   },
   {
+   "id": "fp",
+   "label": "Open on the map and press Play",
+   "hash": "#m=2003-04&r=riau&c=IDN&k=viirs_eq&v=100.659,0.926,9.28&s=fire-modis,palm&o=fire-modis,fire-viirs,fire-harm,regions,countries,burned,drivers,palm,tmfdef,tmfdeg,mb_mine,mb_pulp,mb_palm,loss,plantation,peat&cal=0&pn=l&t=timeline",
+   "hint": "Press Play: in Riau the orange fire points come and go with each dry season, while oil palm (green) spreads year by year from 2003.",
+   "start": "2003-04",
+   "action": "2003-08",
+   "panels": "wide: Layers card (MODIS and Oil palm rows), Details and calendar hidden; phone/tablet: Timeline tab (Play lives there)"
+  },
+  {
    "id": "f2",
    "label": "Open on the map and press Play",
    "hash": "#m=2015-06&r=indonesia&c=IDN&k=viirs_eq&v=110.003,-1.000,4.59&s=fire-modis&t=timeline&pn=d&cal=1",

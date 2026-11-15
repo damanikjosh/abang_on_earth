@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""build the homepage "Facts" row (five tested facts, each with an inline SVG diagram drawn from real data).
+"""build the homepage "Facts" row (six tested facts, each with an inline SVG diagram drawn from real data).
   python3 scripts/build_facts_data.py            # writes scripts/facts_data.json and rewrites the block between <!-- facts:begin --> and <!-- facts:end --> in index.html
   python3 scripts/build_facts_data.py --check    # recompute and fail if index.html or facts_data.json differ (used by tests/facts.test.ts)
 Inputs (all in the repo; the file hashes are recorded in facts_data.json):
@@ -25,6 +25,12 @@ FACTBOOK = {
     "elnino_means": {"el_nino": 95205, "neutral": 44110, "la_nina": 24278, "ratio_neutral": 2.16, "ratio_others": 2.5, "rank_corr": 0.73, "rank_corr_wo_2015": 0.70, "y2015": 149770},
     "payoff": {"jump_glued": 5.04, "step_scaled": 1.04, "heldout_mean_pct": 5.7, "heldout_worst_pct": 15, "y2012_high_pct": 11},
     "seasons": {"months_apart": 5.9, "mainland_febapr_pct": 75, "indonesia_augoct_pct": 65, "peak_years_of_25": 25, "malaysia_top3_pct": 43},
+    # land-use study of this project (re-derived independently on 15 Nov 2026): Sumatra + Kalimantan, forest lost 2002-2011, 275 m forest points;
+    # "burned" = a MODIS fire in the loss year or the year before; palm = Descals planting year in the loss year or up to ten years after; other classes = Sims et al. 1 km drivers map.
+    # ratio = share among burned-then-cleared / share among cleared-without-fire, all classes kept; [low, high] = 95% range
+    "palm_fire": {"palm_burned_pct": 36.1, "palm_unburned_pct": 28.1,
+                  "ratios": [["Oil palm", 1.28, 1.19, 1.38], ["Other farming", 0.95, 0.91, 1.00], ["Shifting cultivation", 0.66, 0.57, 0.75], ["Mines and energy", 0.54, 0.44, 0.64], ["Logging", 0.52, 0.44, 0.63]],
+                  "ratio_palm_wo_wildfire_class": 1.35},
     "unseen": {"clusters_unseen_pct": 86, "range_pct": [82, 88], "single_share_pct": 57, "single_unseen_pct": 95, "detections_in_seen_clusters_pct": 55, "same_sensor_50min_match_pct": [53, 70]},
 }
 
@@ -172,6 +178,19 @@ def chart5(d):
     return svg("Periods of the real MODIS and VIIRS records and of the experimental Harmonized VIIRS layer, 2001 to 2025",
                "".join(o), "Three bars on a 2001 to 2025 axis. MODIS: January 2001 to December 2025. VIIRS: January 2012 to December 2025. Harmonized VIIRS, the experimental model layer: July 2002 to January 2012, 115 months and 608,298 points, night passes only.")
 
+def chart_palm():
+    r = FACTBOOK["palm_fire"]["ratios"]; L, R, T = 150, 44, 40; w = W - L - R; top = 1.5
+    X = lambda v: L + w * v / top
+    o = [f'<line class="brk" x1="{X(1):.1f}" x2="{X(1):.1f}" y1="{T-12}" y2="{H-34}"/>' + txt(X(1), T - 18, "1.0 = same with or without fire", "ax", "middle")]
+    for i, (lab, v, lo, hi) in enumerate(r):
+        y = T + i * 36
+        o.append(txt(L - 8, y + 16, lab, "ax-fg" if i == 0 else "ax", "end"))
+        o.append(f'<rect class="{"bar-ac" if i == 0 else "bar-mu"}" x="{L}" y="{y}" width="{X(v) - L:.1f}" height="22"/>')
+        o.append(txt((X(1) if 0.8 < v < 1 else X(v)) + 6, y + 16, f"{v:.2f}", "ax-fg" if i == 0 else "ax"))  # a value just under 1.0 is written past the dashed line, not on it
+    o.append(txt(L, H - 10, "less often after fire", "ax") + txt(W - R + 40, H - 10, "more often", "ax", "end"))
+    return svg("Oil palm is the only land use that is more common where the forest burned before it was cleared",
+               "".join(o), "Five bars of a ratio: the share of a land use among forest that burned and was then cleared, divided by its share among forest cleared without fire. Oil palm 1.28, other farming 0.95, shifting cultivation 0.66, mines and energy 0.54, logging 0.52. A dashed line marks 1.0, the same with or without fire.")
+
 # ---------------------------------------------------------------- HTML
 def hint_html(link): return f'<p class="muted small fact-hint">{link["hint"]}</p>' if link.get("hint") else ""
 def a(link, cls="pill"): return f'<a class="{cls}" href="app/{esc(link["hash"])}" data-fact-link="{esc(link["id"])}">{esc(link["label"])}</a>'
@@ -182,7 +201,7 @@ def card(n, title, num, numcap, body, keep, source, fig, figcap, links):
     act = a(link, "pill solid")
     return f'''<article class="fact two" id="fact-{n}" aria-labelledby="fact-{n}-h">
 <div class="stack">
-<p class="eyebrow">Fact {n} of 5</p>
+<p class="eyebrow">Fact {n} of 6</p>
 <h3 class="disp fact-h" id="fact-{n}-h">{title}</h3>
 <p class="fact-num disp" aria-label="{esc(numcap)}">{num}</p>
 <p class="body">{body}</p>
@@ -216,13 +235,19 @@ def build_html(d, L):
         "NASA FIRMS MODIS detections (CC0), 10 countries. Details on <a href=\"credits/\">Credits</a>.",
         chart3(d["f3"]), "Share of a year's MODIS detections in each calendar month, mean over 25 years. Grey bands: Feb–Apr and Aug–Oct.",
         ls("f3")))
-    c.append(card(4, "VIIRS sees small fires that MODIS misses", "86%", "86 percent",
+    c.append(card(4, "Where forest burned before it was cleared, oil palm followed more often", "36% vs 28%", "36 percent against 28 percent",
+        "Sumatra and Kalimantan, forest lost from 2002 to 2011. Where MODIS saw a fire in the year of the loss or the year before, 36.1% of the lost forest was oil palm within ten years. Where it saw no fire, 28.1%. That is 1.28 times as often (range 1.19 to 1.38). Of everything the cleared forest became, oil palm is the only land use that is more common after fire: other farming is the same with or without fire (0.95), and mines (0.54) and logging (0.52) are less common.",
+        "This is an association. It does not show that a fire was set to plant oil palm. “No fire” means no fire seen by MODIS; small or cloud-hidden fires are missed. Most of the difference comes from fire in the year of the loss itself.",
+        "Forest loss: Hansen et al. 2013 (CC BY 4.0); oil palm planting year: Descals et al. 2024 (CC BY 4.0); other land uses: Sims et al. 2025 (CC BY 4.0); fires: NASA FIRMS MODIS (CC0). Details on <a href=\"credits/\">Credits</a>.",
+        chart_palm(), "How much more or less often each land use follows forest that burned before it was cleared, compared with forest cleared without fire. Sumatra and Kalimantan, forest lost 2002–2011.",
+        ls("fp")))
+    c.append(card(5, "VIIRS sees small fires that MODIS misses", "86%", "86 percent",
         "of VIIRS fire clusters (2012–2025, 11 countries) have no MODIS detection within 2 km on the same day; the range is 82–88% depending on how clusters are drawn. 57% of clusters are a single detection, and 95% of those are not seen by MODIS.",
         "“Not seen” mixes small fires, a different overpass time and swath coverage; the same VIIRS sensor 50 minutes later matches only 53–70% in Indonesia.",
         "NASA FIRMS MODIS and VIIRS detections (CC0); Harmonized VIIRS is our own model output (CC BY 4.0). Details on <a href=\"credits/\">Credits</a>.",
         chart4(), "VIIRS fire clusters 2012–2025: share with and without a MODIS detection within 2 km on the same day.",
         ls("f4")))
-    c.append(card(5, "Our experimental model draws the fires of 2002\u20132011 as VIIRS-style points", "608,298 points", "608,298 points",
+    c.append(card(6, "Our experimental model draws the fires of 2002\u20132011 as VIIRS-style points", "608,298 points", "608,298 points",
         "<b>Harmonized VIIRS</b> is an experimental layer: our own model reads MODIS Aqua night scenes (46,125 of them) and draws where a VIIRS-style sensor would have seen heat. The layer holds 608,298 points over 115 months, from July 2002 to January 2012, night passes only. It is experimental model output, not VIIRS data.",
         "It exists for night passes only and covers Southeast Asia in two areas: Indonesia with its neighbours, and the mainland with the Philippines. Read the <a href=\"paper/technical-report.pdf\" target=\"_blank\" rel=\"noopener\">technical report</a> for how it was made and what we tested.",
         "NASA MODIS Aqua night scenes (LAADS DAAC, NASA open data) and NASA FIRMS MODIS (CC0); the points are our own model output (CC BY 4.0). Details on <a href=\"credits/\">Credits</a>.",
@@ -231,7 +256,7 @@ def build_html(d, L):
     head = '''<section class="band" id="facts" aria-labelledby="facts-h">
 <div class="stack">
 <p class="eyebrow">Facts we tested</p>
-<h2 class="disp" id="facts-h">Five facts about fire in Southeast Asia.</h2>
+<h2 class="disp" id="facts-h">Six facts about fire in Southeast Asia.</h2>
 <p class="body">Each button opens the map at the place, month and layers that show the fact; press Play there to watch it happen. A detection is one hot pixel reported by a satellite; every count here is a count of detections, not of fires.</p>
 </div>
 '''
