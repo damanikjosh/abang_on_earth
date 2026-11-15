@@ -1,0 +1,327 @@
+[
+ {
+  "site": "Perawang (APP pulp mill), Riau",
+  "cls": "pulp",
+  "found": true,
+  "lon": 101.5975,
+  "lat": 0.7795,
+  "source_first_year": 2005,
+  "pixel_first_year": 2005,
+  "tile_zoom": 10,
+  "rgba_by_year": {
+   "2001": null,
+   "2004": null,
+   "2005": [
+    0,
+    157,
+    150,
+    64
+   ],
+   "2008": [
+    0,
+    157,
+    150,
+    64
+   ],
+   "2023": [
+    0,
+    157,
+    150,
+    64
+   ]
+  },
+  "first_drawn_year": 2005,
+  "additive": true
+ },
+ {
+  "site": "Kerinci (RAPP pulp mill), Riau",
+  "cls": "pulp",
+  "found": true,
+  "lon": 102.0005,
+  "lat": 0.4495,
+  "source_first_year": 2007,
+  "pixel_first_year": 2006,
+  "tile_zoom": 10,
+  "rgba_by_year": {
+   "2001": null,
+   "2005": null,
+   "2006": null,
+   "2007": [
+    0,
+    157,
+    150,
+    255
+   ],
+   "2010": [
+    0,
+    157,
+    150,
+    255
+   ],
+   "2023": [
+    0,
+    157,
+    150,
+    255
+   ]
+  },
+  "first_drawn_year": 2007,
+  "additive": true
+ },
+ {
+  "site": "OKI (APP pulp), S Sumatra",
+  "cls": "pulp",
+  "found": true,
+  "lon": 105.2435,
+  "lat": -3.0875,
+  "source_first_year": 2021,
+  "pixel_first_year": 2021,
+  "tile_zoom": 10,
+  "rgba_by_year": {
+   "2001": null,
+   "2020": null,
+   "2021": [
+    0,
+    157,
+    150,
+    64
+   ],
+   "2023": [
+    0,
+    157,
+    150,
+    64
+   ]
+  },
+  "first_drawn_year": 2021,
+  "additive": true
+ },
+ {
+  "site": "WKS pulp concession, Jambi",
+  "cls": "pulp",
+  "found": true,
+  "lon": 102.6305,
+  "lat": -1.3605,
+  "source_first_year": 2018,
+  "pixel_first_year": 2018,
+  "tile_zoom": 10,
+  "rgba_by_year": {
+   "2001": null,
+   "2017": null,
+   "2018": [
+    0,
+    157,
+    150,
+    91
+   ],
+   "2021": [
+    0,
+    157,
+    150,
+    91
+   ],
+   "2023": [
+    0,
+    157,
+    150,
+    91
+   ]
+  },
+  "first_drawn_year": 2018,
+  "additive": true
+ },
+ {
+  "site": "Sangatta (KPC coal), E Kalimantan",
+  "cls": "mine",
+  "found": true,
+  "lon": 117.5505,
+  "lat": 0.5505,
+  "source_first_year": 2023,
+  "pixel_first_year": 2023,
+  "tile_zoom": 10,
+  "rgba_by_year": {
+   "2001": null,
+   "2022": null,
+   "2023": [
+    147,
+    139,
+    56,
+    64
+   ]
+  },
+  "first_drawn_year": 2023,
+  "additive": true
+ },
+ {
+  "site": "Tutupan (Adaro coal), S Kalimantan",
+  "cls": "mine",
+  "found": true,
+  "lon": 115.4495,
+  "lat": -2.1505,
+  "source_first_year": 2013,
+  "pixel_first_year": 2013,
+  "tile_zoom": 10,
+  "rgba_by_year": {
+   "2001": null,
+   "2012": null,
+   "2013": [
+    147,
+    139,
+    56,
+    91
+   ],
+   "2016": [
+    147,
+    139,
+    56,
+    91
+   ],
+   "2023": [
+    147,
+    139,
+    56,
+    91
+   ]
+  },
+  "first_drawn_year": 2013,
+  "additive": true
+ },
+ {
+  "site": "Lati (Berau coal), E Kalimantan",
+  "cls": "mine",
+  "found": true,
+  "lon": 117.3045,
+  "lat": 1.9475,
+  "source_first_year": 2018,
+  "pixel_first_year": 2018,
+  "tile_zoom": 10,
+  "rgba_by_year": {
+   "2001": null,
+   "2017": null,
+   "2018": [
+    147,
+    139,
+    56,
+    64
+   ],
+   "2021": [
+    147,
+    139,
+    56,
+    64
+   ],
+   "2023": [
+    147,
+    139,
+    56,
+    64
+   ]
+  },
+  "first_drawn_year": 2018,
+  "additive": true
+ },
+ {
+  "site": "Morowali (IMIP nickel), C Sulawesi",
+  "cls": "mine",
+  "found": true,
+  "lon": 121.9475,
+  "lat": -2.8015,
+  "source_first_year": 2020,
+  "pixel_first_year": 2020,
+  "tile_zoom": 10,
+  "rgba_by_year": {
+   "2001": null,
+   "2019": null,
+   "2020": [
+    147,
+    139,
+    56,
+    64
+   ],
+   "2023": [
+    147,
+    139,
+    56,
+    64
+   ]
+  },
+  "first_drawn_year": 2020,
+  "additive": true
+ },
+ {
+  "site": "Kampar oil palm belt, Riau",
+  "cls": "palm",
+  "found": true,
+  "lon": 101.2005,
+  "lat": 0.3005,
+  "source_first_year": 2005,
+  "pixel_first_year": 2001,
+  "tile_zoom": 9,
+  "rgba_by_year": {
+   "2001": [
+    154,
+    95,
+    176,
+    91
+   ],
+   "2005": [
+    154,
+    95,
+    176,
+    91
+   ],
+   "2008": [
+    154,
+    95,
+    176,
+    91
+   ],
+   "2023": [
+    154,
+    95,
+    176,
+    91
+   ]
+  },
+  "first_drawn_year": 2001,
+  "additive": true
+ },
+ {
+  "site": "Kotawaringin oil palm, C Kalimantan",
+  "cls": "palm",
+  "found": true,
+  "lon": 111.7995,
+  "lat": -2.4005,
+  "source_first_year": 2002,
+  "pixel_first_year": 2001,
+  "tile_zoom": 9,
+  "rgba_by_year": {
+   "2001": [
+    154,
+    95,
+    176,
+    146
+   ],
+   "2002": [
+    154,
+    95,
+    176,
+    200
+   ],
+   "2005": [
+    154,
+    95,
+    176,
+    255
+   ],
+   "2023": [
+    154,
+    95,
+    176,
+    255
+   ]
+  },
+  "first_drawn_year": 2001,
+  "additive": true
+ }
+]
