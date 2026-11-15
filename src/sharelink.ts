@@ -42,3 +42,10 @@ export const parseBase = (s: string | undefined): BaseMode => (s === "sat" ? "sa
 
 /** rg = the metric colour overlay row: "0" = off; anything else, or no key (every older link), = on. */
 export const parseRegionsOn = (s: string | undefined): boolean => s !== "0";
+
+/** Does the link carry any map state? A bare /app/ (or one with only the open tab) is a fresh start and gets the current default layers; a link that carries state but no `s` key was written by an older version and keeps the
+ *  default that version had (Provinces, not Countries): so a link shared before the default changed still opens as the sender saw it. Links written now always carry `s`. */
+export const STATE_KEYS = ["m", "r", "c", "k", "kc", "v", "rg", "l", "f", "o", "p", "g", "x", "b", "vr"] as const;
+export const hasStateKeys = (h: Record<string, string | undefined>): boolean => STATE_KEYS.some((k) => h[k] !== undefined);
+/** The layer on the region-colour level that is on by default: Countries when the data has several countries, Provinces otherwise or for a link written before the default changed. */
+export const defaultRegionRow = (h: Record<string, string | undefined>, multi: boolean): "countries" | "regions" => (multi && !(h.s === undefined && hasStateKeys(h)) ? "countries" : "regions");

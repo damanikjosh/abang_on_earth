@@ -133,7 +133,7 @@ with sync_playwright() as p:
                 for s in [s for s in SITES if s["cls"] == cls and s["found"]]:
                     res = site_years(pg, rid, s)
                     need(all(r[2] for r in res), f"{name}: {s['site']} (first year {s['source_first_year']}): " + "; ".join(f"{r[0]} {r[1]} {'ok' if r[2] else 'FAIL'} ({r[3]}/49)" for r in res))
-                need(not errs, f"{name}: no console errors on the {cls} sites page")
+                need(not errs, f"{name}: no console errors on the {cls} sites page" + (f" {[e[:160] for e in errs[:2]]}" if errs else ""))
                 s = next(s for s in SITES if s["cls"] == cls and s["found"])
                 load(pg, f"#v=113.5,-1.8,6.5&m=2023-06&s={rid}&b=sat"); pg.add_style_tag(content=HIDE); pg.wait_for_timeout(1500)
                 res = site_years(pg, rid, s, "sat", years=[2023])

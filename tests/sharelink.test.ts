@@ -35,3 +35,17 @@ test("rg=0 switches the metric colour overlay off; no key, rg=1 or junk keep it 
   assert.equal(parseRegionsOn("off"), true);
   assert.equal(parseRegionsOn(""), true);
 });
+
+// Countries is the default region level on a fresh start; links written by older versions keep Provinces.
+import { hasStateKeys, defaultRegionRow } from "../src/sharelink.ts";
+test("default region row: fresh start = Countries, old state link without s = Provinces, link with s = whatever s says", () => {
+  assert.equal(defaultRegionRow({}, true), "countries");
+  assert.equal(defaultRegionRow({ t: "layers" }, true), "countries"); // only the open tab: still a fresh start
+  assert.equal(defaultRegionRow({ m: "2019-09", r: "riau" }, true), "regions"); // a state link from before the change
+  assert.equal(defaultRegionRow({ rg: "0" }, true), "regions"); // part-1 link: its own handling switches Provinces off
+  assert.equal(defaultRegionRow({ l: "loss", f: "viirs" }, true), "regions");
+  assert.equal(defaultRegionRow({ s: "fire-viirs", m: "2019-09" }, true), "countries"); // has s: the default is not used for the rows s names (only its own)
+  assert.equal(defaultRegionRow({}, false), "regions"); // Indonesia-only data has no country level
+  assert.equal(hasStateKeys({ t: "details" }), false);
+  assert.equal(hasStateKeys({ v: "1,2,3" }), true);
+});

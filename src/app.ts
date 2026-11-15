@@ -11,7 +11,7 @@ import { DOCK_QUERY, isDockLayout, isSideLayout } from "./layout";
 import { FireLayers, type FireFile, type FireDef } from "./fire";
 import { dataUrl, DEFAULT_BASE } from "./dataroot";
 import { fetchT, STYLES, startEarly } from "./boot";
-import { encodeOff, parseOff, parseTab, parseBase, parseRegionsOn, encodeVariants, parseVariants } from "./sharelink";
+import { encodeOff, parseOff, parseTab, parseBase, parseRegionsOn, defaultRegionRow, encodeVariants, parseVariants } from "./sharelink";
 import "./layerpanel/layerpanel.css";
 import { classEditable, splitMonth, tiledClasses } from "./fireclasses";
 import { OnTheMapList, LayerCatalogue, InfoPopover, decodeState, encodeState, activeOrder, setActive, applyActiveOrder, setOpacity, opacityOf, setOpenGroups, type PanelState, type Defaults, type InfoContent } from "./layerpanel/index.ts";
@@ -335,7 +335,7 @@ async function main() {
     }
     const rowIds = [...fireIds, ...layers.defaultOrder(["regions"])].flatMap((i) => (i === "regions" && multi ? ["regions", "countries"] : [i])).filter((i) => !HIDDEN_ROWS.includes(i) && !REMOVED_ROWS.includes(i)); // top first: fire, then other new layers, regions, context layers
     const fireDefault = (ff?.layers ?? []).filter((d) => !d.placeholder && !d.clearing).map((d) => "fire-" + d.id); // clearing layers start off
-    panelDefs = { order: rowIds, active: [...fireDefault, "regions"], open: DEFAULT_OPEN, keepInLegacy: ["regions"] };
+    panelDefs = { order: rowIds, active: [...fireDefault, defaultRegionRow(H, !!multi)], open: DEFAULT_OPEN, keepInLegacy: ["regions"] }; // fresh start: Countries on; a link from an older version keeps Provinces
     let st = decodeState(H, panelDefs).state;
     if (H.rg === "0" && H.s === undefined) st = setActive(st, "regions", false); // a part-1 link (rg=0) has no s key
     const oneLevel = (x: PanelState, id: string, on: boolean): PanelState => (on && (id === "regions" || id === "countries") ? setActive(x, id === "regions" ? "countries" : "regions", false) : x); // Provinces and Countries are shown one at a time (the upper one would hide the other)
@@ -705,7 +705,7 @@ async function main() {
     hashT = window.setTimeout(() => {
       const c = map.getCenter();
       const q = new URLSearchParams({ m: month, r: regionSel.value, ...(multi ? { c: country } : {}), k: metricSel.value, v: `${c.lng.toFixed(3)},${c.lat.toFixed(3)},${map.getZoom().toFixed(2)}` });
-      if (panelSt && panelDefs) new URLSearchParams(encodeState(panelSt, panelDefs)).forEach((v, k) => q.set(k, v)); // panel keys: s (layers on) o (order) p (opacity) g (open groups)
+      if (panelSt && panelDefs) { new URLSearchParams(encodeState(panelSt, panelDefs)).forEach((v, k) => q.set(k, v)); if (!q.has("s")) q.set("s", activeOrder(panelSt).join(",")); } // panel keys: s (layers on, ALWAYS written: a link must not depend on the default of the version that opens it) o (order) p (opacity) g (open groups)
       const off: Record<string, number[]> = {}; // class switches, open tab
       document.querySelectorAll<HTMLInputElement>("input[data-cls]:not(:checked):not(:disabled)").forEach((el) => { if (!el.dataset.row!.startsWith("fire-")) (off[el.dataset.row!] ??= []).push(Number(el.dataset.cls)); });
       for (const [id, cs] of Object.entries(fire?.offClasses() ?? {})) off["fire-" + id] = cs; // fire layers: from the layer state, so a choice made in a split month survives the months without tiles
