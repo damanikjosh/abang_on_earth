@@ -9,9 +9,9 @@ const layers = JSON.parse(readFileSync("public/data-v4/layers.json", "utf8")).la
 const links5 = JSON.parse(readFileSync("scripts/facts_links.json", "utf8")).links as { hash: string; start: string; action: string }[];
 const fire = JSON.parse(readFileSync("public/data-v4/manifest.json", "utf8")).fire_layers.layers as { id: string; min: string; max: string; classes?: { id: number; disabled?: boolean }[] }[];
 
-test("the Facts row exists once, sits before the technical report row, has an anchor and six cards", () => {
+test("the Facts row exists once, sits after the model and technical report rows, has an anchor and six cards", () => {
   assert.equal((html.match(/id="facts"/g) ?? []).length, 1);
-  assert.ok(html.indexOf('id="facts"') < html.indexOf('id="paper"') && html.indexOf('id="research"') < html.indexOf('id="facts"'));
+  assert.ok(html.indexOf('id="research"') < html.indexOf('id="paper"') && html.indexOf('id="paper"') < html.indexOf('id="facts"')); // model, then its technical report, then the facts
   assert.equal((row.match(/<article class="fact two"/g) ?? []).length, 6);
   assert.equal((row.match(/Open on the map and press Play/g) ?? []).length, 5); // the last fact's button is "Open on the map" only (owner's wording)
   assert.equal((row.match(/data-fact-link="f5">Open on the map</g) ?? []).length, 1);
