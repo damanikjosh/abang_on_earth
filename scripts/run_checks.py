@@ -14,7 +14,7 @@ CHECKS = [  # (script, extra packages, extra arguments after BASE_URL)
     ("check_scrub.py", "playwright", []), ("check_fireorder.py", "playwright", []), ("check_layer_panel.py", "playwright", []),
     ("check_autoscroll.py", "playwright", []), ("check_clickrule.py", "playwright", []), ("check_countries.py", "playwright", []),
     ("check_basemap.py", "playwright,pillow,numpy", []), ("check_mapbiomas.py", "playwright,pillow", []), ("check_harmonized.py", "playwright", []),
-    ("check_daynight.py", "playwright,pillow,numpy", []), ("check_tiles.py", "pmtiles", []),
+    ("check_daynight.py", "playwright,pillow,numpy", []), ("check_fire_daynight_site.py", "playwright,pillow,numpy", []), ("check_tiles.py", "pmtiles", []),
     ("check_paper_row.py", "", ["public/paper/technical-report.pdf"]),
 ]
 args = [a for a in sys.argv[1:] if not a.startswith("--")]

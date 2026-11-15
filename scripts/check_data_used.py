@@ -87,7 +87,7 @@ def used_set():
         for d in lay["layers"]:
             if d["id"] in hid or d.get("placeholder"):
                 continue
-            paths = [(d["path"], d.get("available"))]
+            paths = [(d["path"], d.get("available"))] if d.get("path") else []
             for c in d.get("classes", []) or []:
                 if c.get("path"): paths.append((c["path"], c.get("available")))
             for p, av in paths:
@@ -95,7 +95,7 @@ def used_set():
         for d in man.get("fire_layers", {}).get("layers", []):
             if ("fire-" + d["id"]) in hid or d.get("placeholder"):
                 continue
-            paths = [(d["path"], d.get("available"))]
+            paths = [(d["path"], d.get("available"))] if d.get("path") else []
             for c in d.get("classes", []) or []:
                 if c.get("path"): paths.append((c["path"], c.get("available")))
             for p, av in paths:

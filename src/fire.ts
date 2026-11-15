@@ -7,7 +7,7 @@ import type { Described } from "./layerinfo";
 import { splitMonth, splitMonths, tiledClasses, ownClasses, classEditable, densValue, densFilter, isMerged, type FireClass } from "./fireclasses";
 export { splitMonth, splitMonths, type FireClass };
 export interface FireDef extends Covered, Described {
-  id: string; label: string; sensor: string; path: string; min: string; max: string; color: string[]; legend: string;
+  id: string; label: string; sensor: string; /** file template of the layer itself; absent when the layer is drawn from its class files only (MODIS and VIIRS day / night) */ path?: string; min: string; max: string; color: string[]; legend: string;
   placeholder?: boolean; clearing?: boolean; available?: string[]; note?: string; pointsFrom?: number;
   /** Optional sub-selection. A month in which EVERY class has tiles (`available`) is drawn from the class files, one source per ticked class; any other month is drawn from `path` exactly as before. */
   classes?: FireClass[];
@@ -36,7 +36,7 @@ export class FireLayers {
   private readonly Z_PTS: number;
   constructor(private map: maplibregl.Map, readonly defs: FireDef[], private base: string, zPts = Z_PTS_DEFAULT) {
     this.Z_PTS = zPts;
-    this.units = defs.flatMap((d): Unit[] => [{ ...d, group: d.id }, ...tiledClasses(d).map((c): Unit => ({ ...d, id: `${d.id}_${c.id}`, path: c.path!, available: c.available, classes: undefined, group: d.id, cls: c.id }))]);
+    this.units = defs.flatMap((d): Unit[] => [...(d.path ? [{ ...d, group: d.id }] : []), ...tiledClasses(d).map((c): Unit => ({ ...d, id: `${d.id}_${c.id}`, path: c.path!, available: c.available, classes: undefined, group: d.id, cls: c.id }))]);
     map.on("sourcedata", () => this.promote());
     map.on("error", (e) => { // a month file that cannot be read: hide this layer for that month, say so in its row; other layers and months are unaffected
       const id = (e as { sourceId?: string }).sourceId; if (!id?.startsWith("fire-") || this.failed.has(id)) return;
@@ -64,7 +64,7 @@ export class FireLayers {
   }
   setMonth(m: string) { this.month = m; this.sync(); }
   reset() { this.shown.clear(); this.pending.clear(); this.sync(); } // after map.setStyle everything is gone
-  private url(d: FireDef, m: string) { const u = new URL(this.base + d.path.replace("{month}", m), location.href); if (this.version) u.searchParams.set("v", this.version); return "pmtiles://" + u.href; }
+  private url(d: FireDef, m: string) { const u = new URL(this.base + d.path!.replace("{month}", m), location.href); if (this.version) u.searchParams.set("v", this.version); return "pmtiles://" + u.href; }
   private lid(d: FireDef, m: string) { return `fire-${d.id}-${m}`; }
   private anchor() { return this.map.getLayer("regions-sel") ? "regions-sel" : undefined; }
   private have(d: FireDef, m: string) { return !d.placeholder && (!d.available || d.available.includes(m)); }

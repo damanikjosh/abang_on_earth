@@ -29,7 +29,7 @@ ONMAP = "[...document.querySelectorAll('#onmap .lp-row')].map(r=>r.dataset.id)"
 FP = """(()=>{const c=document.getElementById('p-details').cloneNode(true);c.querySelector('#d-chip').remove();c.querySelectorAll('.hl').forEach(e=>e.classList.remove('hl'));
   c.querySelectorAll('[class=""]').forEach(e=>e.removeAttribute('class'));return c.innerHTML})()"""
 def styleidx(pg, prefix):  # highest style index of a map layer of this row (drawn last = on top)
-    return pg.evaluate("(p)=>{const ids=__map.getStyle().layers.map(l=>l.id);let m=-1;ids.forEach((id,i)=>{if(id===p||id.startsWith(p+'-'))m=i});return m}", prefix)
+    return pg.evaluate("(p)=>{const ids=__map.getStyle().layers.map(l=>l.id);let m=-1;ids.forEach((id,i)=>{if(id===p||id.startsWith(p+'-')||id.startsWith(p+'_'))m=i});return m}", prefix)
 def tab(pg, t, w):
     if w < 1200: pg.click(f"#tab-{t}"); pg.wait_for_timeout(200)
 def handle_center(pg, rid):

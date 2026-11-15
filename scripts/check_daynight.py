@@ -70,7 +70,10 @@ with sync_playwright() as p:
             load(pg, "#" + M + Z7 + "&t=layers")
             dd, dn = rendered(pg, "fire-modis_1-2002-09-dens"), rendered(pg, "fire-modis_2-2002-09-dens"); imb = px(pg)
             need(dd > 0 and dn > 0, f"{name}: density cells at z7: day {dd}, night {dn}")
+            nf = pg.evaluate("JSON.stringify(__map.getFilter('fire-modis_2-2002-09-dens'))"); nc = pg.evaluate("JSON.stringify(__map.getPaintProperty('fire-modis_2-2002-09-dens','fill-color'))"); dfl = pg.evaluate("JSON.stringify(__map.getFilter('fire-modis_1-2002-09-dens'))")
+            need('"o"' in nf and '"bt"' in nc and dfl in (None, "null", "undefined") and '"bt"' in pg.evaluate("JSON.stringify(__map.getPaintProperty('fire-modis_1-2002-09-dens','fill-color'))"), f"{name}: both ticked: Day draws every cell and Night only the cells Day lacks (o = 0), both coloured by the combined bin bt")
             box(pg, 2).scroll_into_view_if_needed(); box(pg, 2).uncheck(); settle(pg)
+            need('"bt"' not in pg.evaluate("JSON.stringify(__map.getPaintProperty('fire-modis_1-2002-09-dens','fill-color'))") and pg.evaluate("JSON.stringify(__map.getFilter('fire-modis_1-2002-09-dens'))") in (None, "null", "undefined"), f"{name}: Night unticked: Day cells are coloured by their own bin b, no filter")
             d2 = float((np.abs(imb - px(pg)).max(axis=2) > 12).mean()); need(rendered(pg, "fire-modis_2-2002-09-dens") <= 0 and rendered(pg, "fire-modis_1-2002-09-dens") == dd and d2 > 0.0005, f"{name}: unticking Night removes the night cells ({dn} -> 0) and changes the density picture ({d2*100:.2f} % of pixels)")
             if SHOTS: pg.screenshot(path=f"{SHOTS}/dn-{name}-z7-dayonly.png")
             # --- link round trip
@@ -80,14 +83,14 @@ with sync_playwright() as p:
             need(box(pg, 1).is_checked() and box(pg, 2).is_checked(), f"{name}: unknown class numbers and rows in x= are ignored")
             load(pg, "#m=2002-09&r=all&k=modis_raw&f=modis&v=112.580,-2.933,7")  # old link: no s, no x
             need(box(pg, 1).is_checked() and box(pg, 2).is_checked() and "fire-modis" in pg.evaluate("[...document.querySelectorAll('#onmap .lp-row')].map(r=>r.dataset.id)"), f"{name}: an old link (f=modis, no x) opens with both boxes ticked and MODIS on")
-            # --- other months
+            # --- every month has class tiles (real release): a month other than 2002-09 is drawn from the class files too, the boxes work there
             load(pg, "#" + M.replace("2002-09", "2002-10") + Z7 + "&t=layers"); v = vis(pg)
-            need(v and all(k.startswith("fire-modis-2002-10") and x == "visible" for k, x in v.items()), f"{name}: 2002-10 (no split tiles) is drawn from the layer's own file: {sorted(v)}")
-            box(pg, 2).scroll_into_view_if_needed(); need(box(pg, 1).is_disabled() and box(pg, 2).is_disabled() and box(pg, 1).is_checked() and box(pg, 2).is_checked() and box(pg, 2).get_attribute("aria-disabled") == "true", f"{name}: in a month without class tiles both boxes are greyed (disabled, aria-disabled) and ticked: the row keeps its shape")
-            row.locator(".lp-info").click(); pg.wait_for_timeout(300); mt = pg.locator('.lp-pop [data-sec="month"] p').inner_text(); pg.keyboard.press("Escape")
-            need("2002-09" in mt and "told apart" in mt, f"{name}: the (i) panel, 'This month', says where Day and Night can be told apart: '{mt}'")
+            need(v and all(k.startswith(("fire-modis_1-2002-10", "fire-modis_2-2002-10")) and x == "visible" for k, x in v.items()) and len(v) == 4, f"{name}: 2002-10 is drawn from the day and night files: {sorted(v)}")
+            box(pg, 2).scroll_into_view_if_needed(); need(not box(pg, 1).is_disabled() and not box(pg, 2).is_disabled() and box(pg, 1).is_checked() and box(pg, 2).is_checked(), f"{name}: the Day and Night boxes are enabled and ticked in every month")
+            box(pg, 2).uncheck(); settle(pg); v = vis(pg); need(hidden(v, "fire-modis_2-2002-10-pts") and v["fire-modis_1-2002-10-pts"] == "visible", f"{name}: unticking Night works in 2002-10 too")
             load(pg, "#m=2019-08&r=all&k=modis_raw&v=112.580,-2.933,7&t=layers"); v = vis(pg)
-            need(v and all(k.startswith("fire-modis-2019-08") for k in v), f"{name}: 2019-08 is drawn from the layer's own file")
+            need(v and all(k.startswith(("fire-modis_1-2019-08", "fire-modis_2-2019-08")) for k in v), f"{name}: 2019-08 is drawn from the class files")
+            need(not [k for k in pg.evaluate("[...document.querySelectorAll('img,link,script')].map(e=>e.src||e.href)") if "/fire/modis/" in (k or "") or "/fire/viirs/" in (k or "")], f"{name}: no request names the removed combined tile folders")
             # --- VIIRS day / night (tiles for 2019-09 only) and the choice surviving a month without tiles
             VM = "m=2019-09&r=all&k=modis_raw&s=fire-viirs&v=112.580,-2.933,7&t=layers"; vb = lambda n: pg.locator(f"#lyr-fire-viirs input[data-cls='{n}']")
             load(pg, "#" + VM); vv = vis(pg, "fire-viirs")
@@ -95,7 +98,7 @@ with sync_playwright() as p:
             vb(2).scroll_into_view_if_needed(); vb(2).uncheck(); settle(pg); vv = vis(pg, "fire-viirs")
             need(hidden(vv, "fire-viirs_2-2019-09-pts") and hidden(vv, "fire-viirs_2-2019-09-dens") and vv["fire-viirs_1-2019-09-pts"] == "visible" and "x=fire-viirs:2" in pg.url, f"{name}: unticking VIIRS Night hides the night points and cells, x=fire-viirs:2")
             pg.evaluate("(()=>{const e=document.getElementById('slider');e.value=String(Number(e.value)-1);e.dispatchEvent(new Event('input',{bubbles:true}))})()"); settle(pg)
-            need(vb(1).is_disabled() and vb(2).is_disabled() and vb(2).is_checked() and "x=fire-viirs:2" in pg.url, f"{name}: in 2019-08 (no tiles) the boxes are greyed and ticked, but the link still remembers Night off")
+            need(not vb(1).is_disabled() and not vb(2).is_disabled() and not vb(2).is_checked() and "x=fire-viirs:2" in pg.url and hidden(vis(pg, "fire-viirs"), "fire-viirs_2-2019-08-pts"), f"{name}: the Night choice carries over to 2019-08 (boxes enabled, Night still off, link keeps x=fire-viirs:2)")
             pg.evaluate("(()=>{const e=document.getElementById('slider');e.value=String(Number(e.value)+1);e.dispatchEvent(new Event('input',{bubbles:true}))})()"); settle(pg)
             need(not vb(2).is_checked() and not vb(2).is_disabled() and hidden(vis(pg, "fire-viirs"), "fire-viirs_2-2019-09-pts"), f"{name}: back in 2019-09 the Night choice is restored")
             # --- opacity and order reach the class layers
