@@ -214,7 +214,7 @@ input[type=range]{width:100%;margin:0;accent-color:var(--accent);cursor:pointer;
 .mine-pop .mine-note{color:var(--body);font-size:12.5px}
 
 /* scroll cue: more content below */
-.pbody[data-more]{-webkit-mask-image:linear-gradient(calc(100% - 32px),transparent);mask-image:linear-gradient(calc(100% - 32px),transparent)}
+.pbody[data-more]{-webkit-mask-image:linear-gradient(#000 calc(100% - 32px),transparent);mask-image:linear-gradient(#000 calc(100% - 32px),transparent)}
 /* touch targets >= 44 px: the grip's hit area grows into the panel padding on its left, the drawn icon stays */
 .grip::after{content:"";position:absolute;inset:0 -2px 0 -16px}
 @media(max-width:1199px),(max-height:600px),(pointer:coarse){.collapse{min-height:44px}}
