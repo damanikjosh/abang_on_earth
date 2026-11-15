@@ -11,7 +11,7 @@ import { DOCK_QUERY, isDockLayout, isSideLayout } from "./layout";
 import { FireLayers, type FireFile, type FireDef } from "./fire";
 import { dataUrl, DEFAULT_BASE } from "./dataroot";
 import { fetchT, STYLES, startEarly } from "./boot";
-import { encodeOff, parseOff, parseTab, parseBase, parseRegionsOn, defaultRegionRow, encodeVariants, parseVariants } from "./sharelink";
+import { encodeOff, parseOff, parseTab, parseBase, parseRegionsOn, parseCal, parsePanels, defaultRegionRow, encodeVariants, parseVariants } from "./sharelink";
 import "./layerpanel/layerpanel.css";
 import { classEditable, splitMonth, tiledClasses } from "./fireclasses";
 import { OnTheMapList, LayerCatalogue, InfoPopover, decodeState, encodeState, activeOrder, setActive, applyActiveOrder, setOpacity, opacityOf, setOpenGroups, type PanelState, type Defaults, type InfoContent } from "./layerpanel/index.ts";
@@ -89,6 +89,8 @@ const infos = new Map<string, RowInfo>();
 const now = new Map<string, { status: string; gap: string }>();
 let popRefresh: (rowId: string) => void = () => {};
 let markNa: (rowId: string, na: boolean) => void = () => {};
+let panelsKey: () => string | null = () => null; // the `pn` link value (shown side panels), or null when it is not written
+let calKey: () => string | null = () => null; // the calendar drawer's `cal` link value, or null when it is not written (set where the drawer is)
 let syncBoxes: () => void = () => {}; // fire class boxes follow the selected month: greyed (and ticked) in a month without per-class tiles
 let impRefresh: (rowId: string) => void = () => {}; // the row's important block / badge may have changed (status, chip)
 const impChip = new Map<string, string>(); // row id -> must-know sentence from the coverage chip ("Indonesia only", "No data here", "Partial data"), set by refreshGaps
@@ -652,19 +654,30 @@ async function main() {
 
   // panels: collapse on desktop, bottom sheet with tabs on phones
   const dock = $("dock"), phone = matchMedia(DOCK_QUERY);
-  document.querySelectorAll<HTMLButtonElement>(".collapse").forEach((b) => b.addEventListener("click", () => {
-    const p = $(b.dataset.for!), c = p.toggleAttribute("data-collapsed");
-    b.setAttribute("aria-expanded", String(!c)); b.textContent = c ? "Show" : "Hide"; measure();
-  }));
+  // Which panels are shown (link keys pn and cal; see src/sharelink.ts). Side panels (floating cards from 1200 px): the Hide buttons; dock layout (phones, tablets): the open tab.
+  const setCollapsed = (id: string, c: boolean) => { const p = $(id), b = document.querySelector<HTMLButtonElement>(`.collapse[data-for="${id}"]`)!; p.toggleAttribute("data-collapsed", c); b.setAttribute("aria-expanded", String(!c)); b.textContent = c ? "Show" : "Hide"; measure(); };
+  document.querySelectorAll<HTMLButtonElement>(".collapse").forEach((b) => b.addEventListener("click", () => { setCollapsed(b.dataset.for!, !$(b.dataset.for!).hasAttribute("data-collapsed")); writeHash(); }));
+  const pnGiven = parsePanels(H.pn);
   const drawer = $("drawer"), calbtn = $("calbtn");
   const setDrawer = (open: boolean) => { drawer.dataset.open = open ? "1" : "0"; calbtn.setAttribute("aria-expanded", String(open)); };
-  setDrawer(!phone.matches && innerHeight >= 820);
-  calbtn.addEventListener("click", () => setDrawer(drawer.dataset.open !== "1"));
+  // The calendar drawer: closed on phones and on short screens, open on tall wide ones (the size default). cal=1 / cal=0 in the link force it open / closed at any size; no cal = the size default, exactly as before.
+  // Writer rule: `cal` is written back only when the opening link had it, or when the user's drawer state differs from the size default, so links of people who never touch the calendar do not change.
+  const calDefault = !phone.matches && innerHeight >= 820, calGiven = parseCal(H.cal);
+  setDrawer(calGiven ?? calDefault);
+  calbtn.addEventListener("click", () => { setDrawer(drawer.dataset.open !== "1"); writeHash(); });
+  panelsKey = () => { // pn: floating panels: the shown ones, written when the link had pn or they differ from the default (both shown); dock layout: only "pn=" (folded dock) is written, the open tab is already t=
+    if (phone.matches) return dock.dataset.open === "1" ? null : "";
+    const shown = ["p-layers", "p-details"].map((id, i) => ($(id).hasAttribute("data-collapsed") ? "" : "ld"[i])).join("");
+    return pnGiven !== null || shown !== "ld" ? shown : null;
+  };
+  calKey = () => { const open = drawer.dataset.open === "1"; return calGiven !== null || open !== calDefault ? (open ? "1" : "0") : null; };
   const setTab = (tab: string, open: boolean) => {
     dock.dataset.tab = tab; dock.dataset.open = open ? "1" : "0"; if (tab === "details" && open) void loadStudy(); writeHash();
     dock.querySelectorAll<HTMLElement>("[role=tab]").forEach((t) => t.setAttribute("aria-selected", String(t.dataset.tab === tab && open)));
   };
-  setTab(parseTab(H.t) ?? "timeline", true); // t= from the link
+  // Dock layout: t= picks the tab; without t, pn picks it (l = Layers, else d = Details, empty = the dock folded); without both, cal=1 needs the Timeline tab (the calendar lives there), which is also the default.
+  const dockTab = parseTab(H.t) ?? (pnGiven ? (pnGiven.includes("l") ? "layers" : pnGiven.includes("d") ? "details" : null) : "timeline");
+  setTab(dockTab ?? "timeline", dockTab !== null);
   dock.querySelectorAll<HTMLElement>("[role=tab]").forEach((t) => t.addEventListener("click", () => setTab(t.dataset.tab!, !(dock.dataset.tab === t.dataset.tab && dock.dataset.open === "1"))));
   const grab = $("grab");
   let y0 = 0, dy = 0, drag = false;
@@ -698,6 +711,7 @@ async function main() {
   updateMore();
   new ResizeObserver(measure).observe(dock); new ResizeObserver(measure).observe($("p-timeline"));
   addEventListener("resize", measure); phone.addEventListener("change", measure); measure();
+  if (!phone.matches && pnGiven) { setCollapsed("p-layers", !pnGiven.includes("l")); setCollapsed("p-details", !pnGiven.includes("d")); } // pn= on floating panels: shown = listed, the rest hidden
 
   // deep link
   function writeHash() {
@@ -714,6 +728,7 @@ async function main() {
       document.querySelectorAll<HTMLSelectElement>("select[data-var]").forEach((el) => { const d = lf?.layers.find((x) => x.id === el.dataset.var); if (d && el.value !== (d.default_variant ?? d.variants?.[0]?.id)) vr[d.id] = el.value; });
       const ovr = encodeVariants(vr); if (ovr) q.set("vr", ovr);
       if (bm.mode === "sat") q.set("b", "sat");
+      { const ck = calKey(); if (ck !== null) q.set("cal", ck); const pk = panelsKey(); if (pk !== null) q.set("pn", pk); } // calendar drawer and side panels
       if (countrySel.value !== countrySel.options[0].value) q.set("kc", countrySel.value); // Countries overlay metric; the default is left out
       if (dock.dataset.tab !== "timeline" && dock.dataset.open === "1") q.set("t", dock.dataset.tab!);
       try { history.replaceState(null, "", "#" + q.toString().replace(/%2C/g, ",").replace(/%3A/g, ":").replace(/%7E/g, "~")); } catch {}

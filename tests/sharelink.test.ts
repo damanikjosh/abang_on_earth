@@ -49,3 +49,23 @@ test("default region row: fresh start = Countries, old state link without s = Pr
   assert.equal(hasStateKeys({ t: "details" }), false);
   assert.equal(hasStateKeys({ v: "1,2,3" }), true);
 });
+
+// cal = calendar drawer open / closed; a view option, not map state
+import { parseCal } from "../src/sharelink.ts";
+test("cal: 1 open, 0 closed, anything else = size default; it does not make a link a state link", () => {
+  assert.equal(parseCal("1"), true); assert.equal(parseCal("0"), false);
+  assert.equal(parseCal(undefined), null); assert.equal(parseCal(""), null); assert.equal(parseCal("2"), null); assert.equal(parseCal("true"), null);
+  assert.equal(hasStateKeys({ cal: "1" }), false);
+  assert.equal(defaultRegionRow({ cal: "1" }, true), "countries"); // only cal: still a fresh start, new default
+  assert.equal(defaultRegionRow({ cal: "1", m: "2019-09" }, true), "regions"); // cal next to old state keys: old default kept
+});
+
+import { parsePanels } from "../src/sharelink.ts";
+test("pn: shown side panels; absent = null (today's behaviour); empty = none; unknown letters ignored; not a state key", () => {
+  assert.equal(parsePanels(undefined), null);
+  assert.deepEqual(parsePanels(""), []);
+  assert.deepEqual(parsePanels("ld"), ["d", "l"]); assert.deepEqual(parsePanels("dl"), ["d", "l"]);
+  assert.deepEqual(parsePanels("l"), ["l"]); assert.deepEqual(parsePanels("d"), ["d"]);
+  assert.deepEqual(parsePanels("lxl?d"), ["d", "l"]);
+  assert.equal(hasStateKeys({ pn: "l" }), false); assert.equal(defaultRegionRow({ pn: "d", cal: "1" }, true), "countries");
+});

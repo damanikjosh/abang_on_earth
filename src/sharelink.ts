@@ -49,3 +49,10 @@ export const STATE_KEYS = ["m", "r", "c", "k", "kc", "v", "rg", "l", "f", "o", "
 export const hasStateKeys = (h: Record<string, string | undefined>): boolean => STATE_KEYS.some((k) => h[k] !== undefined);
 /** The layer on the region-colour level that is on by default: Countries when the data has several countries, Provinces otherwise or for a link written before the default changed. */
 export const defaultRegionRow = (h: Record<string, string | undefined>, multi: boolean): "countries" | "regions" => (multi && !(h.s === undefined && hasStateKeys(h)) ? "countries" : "regions");
+
+/** cal = the calendar drawer: "1" open, "0" closed, anything else / absent = null = the size default. NOT in STATE_KEYS on purpose: it is a view option, so a link with only cal=1 is still a fresh start and gets the current default layers. */
+export const parseCal = (s: string | undefined): boolean | null => (s === "1" ? true : s === "0" ? false : null);
+
+/** pn = which side panels are shown: letters l (Layers / the map card) and d (Details), e.g. pn=ld, pn=l, pn=d, empty (pn=) = none. null = key absent = today's behaviour (everything shown on a wide screen, the Timeline tab on a dock layout).
+ *  Unknown letters are ignored. Like `cal` it is a view option, NOT in STATE_KEYS. On a dock layout (phones, tablets) one tab is open at a time: t= wins, else l, else d, empty = the dock is folded. */
+export const parsePanels = (s: string | undefined): string[] | null => (s === undefined ? null : [...new Set(s.split("").filter((c) => c === "l" || c === "d"))].sort());

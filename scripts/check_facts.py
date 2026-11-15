@@ -84,7 +84,7 @@ with sync_playwright() as p:
             pg.wait_for_timeout(80)
         need(seen[-1] == alab, f"[{lid}] Play: months stepped through {seen[0]} .. {seen[-1]} ({len(seen)-1} steps)")
         def idx(l): return int(l.split()[1]) * 12 + MON.index(l.split()[0])
-        need(len(seen) >= 3 and all(idx(b2) - idx(a2) == 1 for a2, b2 in zip(seen, seen[1:])), f"[{lid}] Play: the month advanced one month at a time")
+        need(len(seen) - 1 >= min(2, max(1, idx(alab) - idx(shown))) and all(idx(b2) - idx(a2) == 1 for a2, b2 in zip(seen, seen[1:])), f"[{lid}] Play: the month advanced one month at a time ({len(seen)-1} steps seen, {idx(alab) - idx(shown)} expected from the link)")  # a link whose action month is one step away (Fact 5: Oct to Nov 2004) needs one step, longer ones at least two
         pg.click("#play"); pg.wait_for_function("window.__map.areTilesLoaded()", timeout=60000); pg.wait_for_timeout(1500)
         on2 = pg.evaluate("[...document.querySelectorAll('.lp-onmap li.lp-row[data-id]')].map(e=>e.dataset.id).sort().join(',')")
         need(on2 == on and pg.evaluate("document.getElementById('play').getAttribute('aria-pressed')") == "false", f"[{lid}] Play: layers still on after the run ({on2}), player paused again")
