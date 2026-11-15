@@ -22,10 +22,10 @@
   {
    "id": "f3",
    "label": "Open on the map and press Play",
-   "hash": "#m=2019-01&r=all&c=all&k=viirs_eq&v=106.000,3.500,3.40&s=fire-modis&t=timeline&pn=&cal=1",
+   "hash": "#m=2014-02&r=all&c=all&k=viirs_eq&v=106.000,3.500,3.40&s=fire-modis",
    "hint": "Press Play: fires appear on the mainland in February to April, then in Indonesia from August.",
-   "start": "2019-01",
-   "action": "2019-09",
+   "start": "2014-02",
+   "action": "2014-09",
    "panels": "wide and phone: both side cards hidden so the wide view is not covered, calendar open (the seasonal stripes)"
   },
   {
