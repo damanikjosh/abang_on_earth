@@ -1,7 +1,7 @@
 {
  "inputs": {
   "public/data-v4/monthly.json": "8946eacd8f1773d0339070267fc5be9a99c188c1302fa24d6013b954dcc85879",
-  "public/data-v4/manifest.json": "e884083a0cda41dc568986d744fb8659696707eadcb191ef5f1def9f97a69e75",
+  "public/data-v4/manifest.json": "2f3a727c7bdcb485cb1632e961288a3609cdcbf8e9bb14fb5d623b882ae7395f",
   "scripts/facts_links.json": "010c0597fbd657529af08568f4d46073d939bafe3681848a890e4905c0069568"
  },
  "factbook": {
