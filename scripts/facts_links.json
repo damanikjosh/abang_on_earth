@@ -22,7 +22,7 @@
   {
    "id": "f3",
    "label": "Open on the map and press Play",
-   "hash": "#m=2014-02&r=all&c=all&k=viirs_eq&v=106.000,3.500,3.40&s=fire-modis",
+   "hash": "#m=2014-02&r=all&c=all&k=viirs_eq&v=106.000,3.500,3.40&s=fire-viirs,fire-modis&o=fire-viirs,fire-modis,fire-harm,regions,countries,burned,drivers,loss,tmfdef,tmfdeg,mb_mine,mb_pulp,mb_palm,palm,plantation,peat",
    "hint": "Press Play: fires appear on the mainland in February to April, then in Indonesia from August.",
    "start": "2014-02",
    "action": "2014-09",

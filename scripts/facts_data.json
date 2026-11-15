@@ -2,7 +2,7 @@
  "inputs": {
   "public/data-v4/monthly.json": "8946eacd8f1773d0339070267fc5be9a99c188c1302fa24d6013b954dcc85879",
   "public/data-v4/manifest.json": "e884083a0cda41dc568986d744fb8659696707eadcb191ef5f1def9f97a69e75",
-  "scripts/facts_links.json": "107c75d4c3887cb2a0f3cbb7067145a8fe8d335092432d192fc483aca09d8cc5"
+  "scripts/facts_links.json": "4ddae877b63d64710f45d05736858eaacaa1733f22c66d687bbcad005199fc4b"
  },
  "factbook": {
   "elnino_means": {
