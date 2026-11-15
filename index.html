@@ -53,7 +53,7 @@
 <div class="stack">
 <p class="eyebrow">The model research</p>
 <h2 class="disp" id="research-h">Can a learned model beat the baseline?</h2>
-<p class="body">We trained a shared encoder for MODIS and VIIRS on pairs of images taken minutes apart over the same ground. We selected 1,017 such pairs; 971 of them gave tiles, and we kept 32,914 tiles. This is research in progress. We ran the model on 46,125 Aqua MODIS night scenes from July 2002 to January 2012, and the map shows the result as the layer <b>Harmonized VIIRS</b>. It is experimental and night only: the model passed 1 of 4 test lines we fixed before testing. The charts and counts still use the ratio baseline.</p>
+<p class="body">We trained a shared encoder for MODIS and VIIRS on pairs of images taken minutes apart over the same ground. We selected 1,017 such pairs; 971 of them gave tiles, and we kept 32,914 tiles. This is research in progress. We ran the model on 46,125 Aqua MODIS night scenes, and the map shows the result for July 2002 to January 2012 as the layer <b>Harmonized VIIRS</b>. It is experimental and night only: the model passed 1 of 4 test lines we fixed before testing. The charts and counts still use the ratio baseline.</p>
 </div>
 <div class="stack">
 <p class="eyebrow">What we found about forest, fire and palm</p>
@@ -125,8 +125,8 @@
 <p class="eyebrow">Fact 5 of 5</p>
 <h3 class="disp fact-h" id="fact-5-h">Our experimental model draws the fires of 2002–2011 as VIIRS-style points</h3>
 <p class="fact-num disp" aria-label="608,298 points">608,298 points</p>
-<p class="body"><b>Harmonized VIIRS</b> is an experimental layer: our own model reads MODIS Aqua night scenes (46,125 of them, July 2002 to January 2012) and draws where a VIIRS-style sensor would have seen heat. The layer holds 608,298 points over 115 months, from July 2002 to January 2012, night passes only. It is experimental model output, not VIIRS data.</p>
-<p class="body"><b>What to keep in mind.</b> It exists for night passes only, and it was computed for two boxes (an Indonesia box and a northern box). Read the <a href="paper/technical-report.pdf" target="_blank" rel="noopener">technical report</a> for how it was made and what we tested.</p>
+<p class="body"><b>Harmonized VIIRS</b> is an experimental layer: our own model reads MODIS Aqua night scenes (46,125 of them) and draws where a VIIRS-style sensor would have seen heat. The layer holds 608,298 points over 115 months, from July 2002 to January 2012, night passes only. It is experimental model output, not VIIRS data.</p>
+<p class="body"><b>What to keep in mind.</b> It exists for night passes only and covers Southeast Asia in two areas: Indonesia with its neighbours, and the mainland with the Philippines. Read the <a href="paper/technical-report.pdf" target="_blank" rel="noopener">technical report</a> for how it was made and what we tested.</p>
 <p class="muted small fact-src">Source: NASA MODIS Aqua night scenes (LAADS DAAC, NASA open data) and NASA FIRMS MODIS (CC0); the points are our own model output (CC BY 4.0). Details on <a href="credits/">Credits</a>.</p>
 <p class="ctas fact-act"><a class="pill solid" href="app/#m=2004-10&amp;r=central-kalimantan&amp;c=IDN&amp;k=viirs_eq&amp;v=113.895,-3.197,9.29&amp;s=fire-harm,fire-modis&amp;o=fire-harm,fire-viirs,fire-modis,regions,countries,burned,drivers,loss,tmfdef,tmfdeg,mb_mine,mb_pulp,mb_palm,palm,plantation,peat&amp;x=fire-modis:1&amp;cal=0&amp;pn=l&amp;t=timeline" data-fact-link="f5">Open on the map</a></p>
 

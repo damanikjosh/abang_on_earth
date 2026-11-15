@@ -31,7 +31,11 @@ if os.environ.get("DATA_DIR"): ptr = {"base": os.environ["DATA_DIR"].rstrip("/")
 print("pointer:", ptr)
 layers = jget(ptr["base"] + "layers.json")["layers"]; man = jget(ptr["base"] + "manifest.json")
 files = []  # (name, path)
+import re, pathlib
+_lg = (pathlib.Path(__file__).resolve().parent.parent / "src/layergroups.ts").read_text()
+UNLISTED = {i for n in ("HIDDEN_ROWS", "REMOVED_ROWS") for m in [re.search(n + r"[^=]*=\s*\[([^\]]*)\]", _lg)] if m for i in re.findall(r'"([^"]+)"', m.group(1))}  # rows the app does not list: their tiles are not shipped
 for d in layers:
+    if d["id"] in UNLISTED or d.get("placeholder"): continue
     av = d.get("available") or []
     if d["mode"] == "static": key = "s"
     elif d["mode"] == "class": key = "c1"

@@ -223,8 +223,8 @@ def build_html(d, L):
         chart4(), "VIIRS fire clusters 2012–2025: share with and without a MODIS detection within 2 km on the same day.",
         ls("f4")))
     c.append(card(5, "Our experimental model draws the fires of 2002\u20132011 as VIIRS-style points", "608,298 points", "608,298 points",
-        "<b>Harmonized VIIRS</b> is an experimental layer: our own model reads MODIS Aqua night scenes (46,125 of them, July 2002 to January 2012) and draws where a VIIRS-style sensor would have seen heat. The layer holds 608,298 points over 115 months, from July 2002 to January 2012, night passes only. It is experimental model output, not VIIRS data.",
-        "It exists for night passes only, and it was computed for two boxes (an Indonesia box and a northern box). Read the <a href=\"paper/technical-report.pdf\" target=\"_blank\" rel=\"noopener\">technical report</a> for how it was made and what we tested.",
+        "<b>Harmonized VIIRS</b> is an experimental layer: our own model reads MODIS Aqua night scenes (46,125 of them) and draws where a VIIRS-style sensor would have seen heat. The layer holds 608,298 points over 115 months, from July 2002 to January 2012, night passes only. It is experimental model output, not VIIRS data.",
+        "It exists for night passes only and covers Southeast Asia in two areas: Indonesia with its neighbours, and the mainland with the Philippines. Read the <a href=\"paper/technical-report.pdf\" target=\"_blank\" rel=\"noopener\">technical report</a> for how it was made and what we tested.",
         "NASA MODIS Aqua night scenes (LAADS DAAC, NASA open data) and NASA FIRMS MODIS (CC0); the points are our own model output (CC BY 4.0). Details on <a href=\"credits/\">Credits</a>.",
         chart5(d["harm"]), "Periods covered by the real MODIS and VIIRS records and by the experimental Harmonized VIIRS layer. The site data has no point count per month, so the diagram shows periods, not monthly counts.",
         ls("f5")))
