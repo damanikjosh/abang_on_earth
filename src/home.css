@@ -71,3 +71,17 @@
 .home .fact-src a{color:var(--muted)}
 @media (max-width:560px){.home .fact{margin-top:48px;gap:28px}.home .fact-act .pill{width:100%;justify-content:center;text-align:center;padding:8px 16px}}
 .home .fact-hint{margin:-4px 0 0}
+
+/* model diagram: five steps in a row on wide screens, a column on phones; colours from the page tokens */
+.home #research{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:700px){.home #research{grid-template-columns:1fr}}
+.home .mdl{grid-column:1/-1;margin:8px 0 0}
+.home .mdl-row{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:28px}
+.home .mdl-step{position:relative;display:flex;flex-direction:column;gap:12px;padding:16px;border:1px solid var(--line);border-radius:14px;background:color-mix(in srgb,var(--bg) 60%,var(--photo))}
+.home .mdl-step svg{width:60px;height:60px;display:block}
+.home .mdl-step svg .c{fill:var(--line)}.home .mdl-step svg .w{fill:color-mix(in srgb,var(--accent) 45%,var(--line))}.home .mdl-step svg .h{fill:var(--accent)}.home .mdl-step svg .o{fill:none;stroke:var(--accent);stroke-width:2}
+.home .mdl-step b{display:block;font-size:16px;line-height:1.3;color:var(--fg)}.home .mdl-step span{display:block;margin-top:4px;font-size:14px;line-height:1.45;color:var(--body)}
+.home .mdl-step:not(:last-child)::after{content:"";position:absolute;right:-20px;top:50%;width:10px;height:10px;border-top:2px solid var(--muted);border-right:2px solid var(--muted);transform:translateY(-50%) rotate(45deg)}
+.home .mdl figcaption{margin-top:14px}
+@media (max-width:900px){.home .mdl-row{grid-template-columns:1fr;gap:26px}.home .mdl-step{flex-direction:row;align-items:center;gap:16px}.home .mdl-step svg{flex:none}
+  .home .mdl-step:not(:last-child)::after{right:auto;left:38px;top:auto;bottom:-18px;transform:rotate(135deg)}}
