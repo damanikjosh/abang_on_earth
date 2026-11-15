@@ -1,0 +1,50 @@
+{
+ "note": "Hashes were written by the app's own link writer (open the app with the seed state, read location.hash) and each is loaded in a browser by scripts/check_facts91.py. Every one carries s= explicitly.",
+ "links": [
+  {
+   "id": "f1a",
+   "label": "Open on the map: Sep 2011",
+   "hash": "#m=2011-09&r=all&c=all&k=viirs_eq&v=113.004,-1.500,4.19&s=fire-modis"
+  },
+  {
+   "id": "f1b",
+   "label": "Sep 2012",
+   "hash": "#m=2012-09&r=all&c=all&k=viirs_eq&v=113.004,-1.500,4.19&s=fire-modis,fire-viirs"
+  },
+  {
+   "id": "f2a",
+   "label": "Open on the map: Sep 2015",
+   "hash": "#m=2015-09&r=all&c=all&k=viirs_eq&v=111.003,-1.000,4.59&s=fire-modis,fire-viirs"
+  },
+  {
+   "id": "f2b",
+   "label": "Sep 2016 for comparison",
+   "hash": "#m=2016-09&r=all&c=all&k=viirs_eq&v=111.003,-1.000,4.59&s=fire-modis,fire-viirs"
+  },
+  {
+   "id": "f3a",
+   "label": "Open on the map: Mar 2019, mainland",
+   "hash": "#m=2019-03&r=all&c=all&k=viirs_eq&v=102.003,18.000,4.39&s=fire-modis"
+  },
+  {
+   "id": "f3b",
+   "label": "Sep 2019, Borneo",
+   "hash": "#m=2019-09&r=all&c=all&k=viirs_eq&v=113.004,-1.500,4.19&s=fire-modis"
+  },
+  {
+   "id": "f4a",
+   "label": "Open on the map: Sep 2019, MODIS and VIIRS at night",
+   "hash": "#m=2019-09&r=all&c=all&k=viirs_eq&v=113.500,-1.800,9.49&s=fire-modis,fire-viirs&x=fire-modis:1~fire-viirs:1"
+  },
+  {
+   "id": "f4b",
+   "label": "Sep 2006, Harmonized VIIRS (experimental)",
+   "hash": "#m=2006-09&r=all&c=all&k=viirs_eq&v=113.500,-1.800,9.49&s=fire-modis,fire-harm&x=fire-modis:1"
+  },
+  {
+   "id": "f5",
+   "label": "Open on the map",
+   "hash": "#m=2016-12&r=all&c=all&k=viirs_eq&v=101.800,0.600,7.19&s=loss,palm"
+  }
+ ]
+}

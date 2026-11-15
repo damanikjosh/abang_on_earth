@@ -53,6 +53,9 @@ The processing that turns the raw FIRMS archive, the Hansen and Descals rasters 
 | `scripts/build_borders.py` | `regions.geojson` | `borders.geojson`, `country-outlines.geojson` |
 These are not run by the checks; they are provided so the layer files can be rebuilt from the public sources.
 
+## Homepage facts row
+The five facts on the homepage, with their inline SVG diagrams, are generated from `public/data-v4/monthly.json` and the map links in `scripts/facts_links.json`: `python3 scripts/build_facts_data.py` writes `scripts/facts_data.json` (the numbers) and rewrites the block between `<!-- facts:begin -->` and `<!-- facts:end -->` in `index.html`; `--check` fails if the page or the JSON were edited by hand (`tests/facts.test.ts` runs it). `scripts/check_facts.py` loads every "Open on the map" link in a browser.
+
 ## Technical report and demo deck
 The homepage has a row for the technical report. Its source lives in another repository; only the built PDF, a page-1 thumbnail and a small JSON are shipped, in `public/paper/`, written by
 ```
